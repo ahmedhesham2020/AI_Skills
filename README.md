@@ -16,9 +16,3 @@ This repository contains a collection of `.md` skill files designed to enhance A
 - **Goal:** Adversarial and penetration testing mindset.
 - **Focus:** Secure Boot, Marvell Switch PFE (Packet Filtering), and UDS Service 0x27/0x29 logic.
 
-## 💻 Installation
-To use these skills locally, clone this repo into your Gemini skills folder:
-```bash
-# On your work laptop:
-mkdir -p ~/.gemini/skills
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO.git](https://github.com/YOUR_USERNAME/YOUR_REPO.git) ~/.gemini/skills
