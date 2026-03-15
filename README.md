@@ -94,3 +94,55 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Create, read, edit, and analyze spreadsheet files (`.xlsx`, `.xlsm`, `.csv`, `.tsv`).
 - **Use when:** Any task where a spreadsheet is the primary input or output — formulas, formatting, charting, data cleaning, or format conversion.
 - **Outputs:** Fully formatted `.xlsx` files with formulas, charts, and structured data.
+
+### 16. DOCX
+- **Goal:** Create, read, edit, and manipulate Word documents (`.docx`).
+- **Outputs:** Formatted `.docx` files with tables, headers, images, and table of contents.
+
+### 17. PDF
+- **Goal:** Process PDFs — read, extract text/tables, merge, split, rotate, add watermarks, fill forms, OCR.
+- **Outputs:** Modified or newly created `.pdf` files.
+
+### 18. PPTX
+- **Goal:** Create, read, edit, and manipulate PowerPoint presentations.
+- **Outputs:** Polished `.pptx` slide decks with professional design.
+
+### 19. Algorithmic Art
+- **Goal:** Create algorithmic and generative art using p5.js with seeded randomness and interactive parameter exploration.
+- **Outputs:** `.html` interactive viewer, `.js` algorithm file, `.md` design philosophy.
+
+### 20. Brand Guidelines
+- **Goal:** Apply consistent brand colors, typography, and visual identity to artifacts.
+- **Outputs:** Styled artifacts using defined brand tokens.
+
+### 21. Canvas Design
+- **Goal:** Create beautiful static visual art and design pieces (posters, illustrations).
+- **Outputs:** `.pdf`, `.png`, and `.md` design philosophy files.
+
+### 22. Claude API
+- **Goal:** Build LLM-powered applications using the Claude API or Anthropic SDKs.
+- **Outputs:** Working application code with Claude API integration across Python, TypeScript, and other languages.
+
+### 23. Doc Co-authoring
+- **Goal:** Structured workflow for co-authoring technical documentation (specs, proposals, decision docs, RFCs).
+- **Outputs:** Professional technical documents with context gathering and reader testing steps.
+
+### 24. Internal Comms
+- **Goal:** Write internal communications — status reports, 3P updates, newsletters, FAQs.
+- **Outputs:** Structured internal communication documents.
+
+### 25. MCP Builder
+- **Goal:** Create high-quality MCP (Model Context Protocol) servers for LLM integration with external services.
+- **Outputs:** MCP server with well-designed tools and documentation.
+
+### 26. Skill Creator
+- **Goal:** Create new skills, iterate and improve existing skills, run evaluations to test skill performance.
+- **Outputs:** New or improved `SKILL.md` files with testing and optimization loops.
+
+### 27. Slack GIF Creator
+- **Goal:** Create animated GIFs optimized for Slack (emoji or message GIFs).
+- **Outputs:** `.gif` files optimized for Slack constraints (128×128 or 480×480).
+
+### 28. Theme Factory
+- **Goal:** Apply professional font and color themes to artifacts — 10 presets plus custom.
+- **Outputs:** Consistently themed presentations, documents, and web artifacts.
