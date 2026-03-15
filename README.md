@@ -74,3 +74,23 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Provide a consistent design system and CSS component library used across all skills that generate HTML output.
 - **Auto-loaded by:** Defect Report Writer, Bug Triage Assistant, Requirements-to-Test-Cases, and any skill that produces an HTML file.
 - **Outputs:** Fully styled HTML files using a shared design token system (colors, typography, cards, tables, badges, progress bars) — no custom styles invented per skill.
+
+### 12. Frontend Design
+- **Goal:** Create distinctive, production-grade frontend interfaces with high design quality.
+- **Use when:** Building web components, pages, dashboards, React components, HTML/CSS layouts, or styling/beautifying any web UI.
+- **Outputs:** Polished HTML/CSS/JS or React code that avoids generic AI aesthetics.
+
+### 13. Web Artifacts Builder
+- **Goal:** Build elaborate, multi-component web applications using React, Tailwind CSS, and shadcn/ui.
+- **Use when:** Complex artifacts requiring state management, routing, or shadcn/ui components are needed.
+- **Outputs:** Single-file HTML artifacts with bundled React + Tailwind + shadcn/ui, ready to run in the browser.
+
+### 14. Webapp Testing
+- **Goal:** Interact with and test local web applications using Playwright.
+- **Use when:** Verifying frontend functionality, debugging UI behavior, capturing screenshots, or viewing browser logs.
+- **Outputs:** Test results, screenshots, browser logs, and Playwright automation scripts.
+
+### 15. XLSX
+- **Goal:** Create, read, edit, and analyze spreadsheet files (`.xlsx`, `.xlsm`, `.csv`, `.tsv`).
+- **Use when:** Any task where a spreadsheet is the primary input or output — formulas, formatting, charting, data cleaning, or format conversion.
+- **Outputs:** Fully formatted `.xlsx` files with formulas, charts, and structured data.
