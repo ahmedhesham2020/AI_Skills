@@ -4,9 +4,18 @@ A collection of Claude Code skill files for software validation, test automation
 
 ## Installation
 
+### Claude Code
 ```bash
-# Clone into your Claude skills folder
-git clone <repo-url> ~/.claude/skills
+# Copy skills into your Claude skills folder
+cp -r claude/* ~/.claude/skills/
+```
+
+### Gemini CLI
+```bash
+# Link skills into your Gemini skills folder
+gemini skills link /path/to/03-AI_Skills/gemini
+# or copy manually
+cp -r gemini/* ~/.gemini/skills/
 ```
 
 ---
