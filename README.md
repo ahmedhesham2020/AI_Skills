@@ -59,8 +59,9 @@ cp -r gemini/* ~/.gemini/skills/
 - **Outputs:** Complete `.gitlab-ci.yml` with stages, lint/test/report jobs, artifact configuration, and caching.
 
 ### 8. SOLID Design Principles
-- **Goal:** Apply SOLID principles to system and code design.
-- **Outputs:** Guided design review, refactoring suggestions, and examples following Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion principles.
+- **Goal:** Apply SOLID principles to code review, system design, teaching, and quiz modes.
+- **Use when:** User pastes code for review, asks to explain a principle, wants to design a system using SOLID, needs a pre-merge checklist, or wants a quiz on SOLID concepts.
+- **Outputs:** Violation table + refactored code (REVIEW), principle explanation with examples (EXPLAIN), class/interface scaffold (APPLY), pass/fail audit (CHECKLIST), or scored quiz (QUIZ).
 
 ### 9. Skill Creator
 - **Goal:** Scaffold a new Claude Code skill from a description.
@@ -146,3 +147,8 @@ cp -r gemini/* ~/.gemini/skills/
 ### 28. Theme Factory
 - **Goal:** Apply professional font and color themes to artifacts — 10 presets plus custom.
 - **Outputs:** Consistently themed presentations, documents, and web artifacts.
+
+### 29. Prompt Architect
+- **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
+- **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
+- **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.

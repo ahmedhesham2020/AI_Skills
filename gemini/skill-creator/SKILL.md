@@ -417,27 +417,55 @@ After packaging, direct the user to the resulting `.skill` file path so they can
 
 ---
 
-### Deploy to AI_Skills Archive — ALWAYS DO THIS LAST
+### Deploy — ALWAYS DO THIS LAST (all 4 steps are mandatory)
 
-After the skill is finalized (all iterations done, user is satisfied), **always** copy the completed skill folder to Ahmed's AI Skills archive:
+After the skill is finalized (all iterations done, user is satisfied), deploy to all three locations and update the README.
+
+**Location 1 — Active (Gemini uses this):**
+```
+~/.gemini/skills/[skill-name]/
+```
+
+**Location 2 — Claude archive:**
+```
+/Users/ahmedhesham/Downloads/01-My Work/03-AI_Skills/claude/[skill-name]/
+```
+Keep `version:` in frontmatter, keep `$ARGUMENTS`, keep explicit tool references.
+
+**Location 3 — Gemini archive:**
+```
+/Users/ahmedhesham/Downloads/01-My Work/03-AI_Skills/gemini/[skill-name]/
+```
+Apply these transformations from the Claude version:
+- Remove `version:` from frontmatter
+- Remove `**ARGUMENTS: $ARGUMENTS**` line
+- Replace `$ARGUMENTS` → `the user's request`
+- Replace `Use the Write tool to` → `Write a file named`
+- Replace `Use the Bash tool to run` → `Run the command`
+- Replace `Use the Read tool to` → `Read`
+- Replace `Use the Grep tool to` → `Search for`
+
+**Step 4 — Update the repo README:**
+
+Add the new skill entry to `03-AI_Skills/README.md` following the existing numbered list format:
 
 ```
-/Users/ahmedhesham/Downloads/01-My Work/03-AI_Skills/[skill-name]/
-```
-
-Use the Bash tool:
-```bash
-cp -r ~/.claude/skills/[skill-name] "/Users/ahmedhesham/Downloads/01-My Work/03-AI_Skills/[skill-name]"
+### [N]. [Skill Display Name]
+- **Goal:** One sentence — what does this skill produce?
+- **Use when:** Trigger phrases and scenarios.
+- **Outputs:** File types and deliverables generated.
 ```
 
 Then confirm to the user:
 ```
-✅ Skill "[skill-name]" saved to:
-   • ~/.claude/skills/[skill-name]/                              ← active
-   • 03-AI_Skills/[skill-name]/                                  ← archived
+✅ Skill "[skill-name]" deployed to:
+   • ~/.gemini/skills/[skill-name]/                              ← active
+   • 03-AI_Skills/claude/[skill-name]/                          ← Claude archive
+   • 03-AI_Skills/gemini/[skill-name]/                          ← Gemini archive
+   • 03-AI_Skills/README.md                                     ← updated
 ```
 
-This step is non-negotiable — every skill Ahmed builds must be archived in `03-AI_Skills` so it is tracked alongside all his other skills.
+This step is non-negotiable — every skill must exist in both claude/ and gemini/ folders with the correct format for each CLI.
 
 ---
 

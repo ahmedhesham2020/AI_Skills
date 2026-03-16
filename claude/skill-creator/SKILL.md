@@ -370,12 +370,24 @@ Apply Gemini transformations per `03-AI_Skills/CLAUDE.md`:
 - Replace `Use the Bash tool to run` → `Run the command`
 - Replace `Use the Read tool to` → `Read`
 
+### Update the repo README
+
+Add the new skill entry to `03-AI_Skills/README.md` following the existing numbered list format:
+
+```
+### [N]. [Skill Display Name]
+- **Goal:** One sentence — what does this skill produce?
+- **Use when:** Trigger phrases and scenarios.
+- **Outputs:** File types and deliverables generated.
+```
+
 Then confirm:
 ```
 ✅ Skill "[skill-name]" deployed to:
    • ~/.claude/skills/[skill-name]/                                    ← active
    • 03-AI_Skills/claude/[skill-name]/                                 ← Claude archive
    • 03-AI_Skills/gemini/[skill-name]/                                 ← Gemini archive
+   • 03-AI_Skills/README.md                                            ← updated
 ```
 
 ---
@@ -428,7 +440,7 @@ Show prompt + output per test case, ask for feedback inline.
 7. Improve        → generalize feedback → iterate until satisfied
 8. Optimize       → description trigger accuracy (optional)
 9. Package        → .skill file (if present_files available)
-10. Deploy        → ~/.claude/skills/ + 03-AI_Skills/claude/ + 03-AI_Skills/gemini/
+10. Deploy        → ~/.claude/skills/ + 03-AI_Skills/claude/ + 03-AI_Skills/gemini/ + update README.md
 ```
 
 ## Reference files
