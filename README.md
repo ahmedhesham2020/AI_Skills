@@ -162,3 +162,8 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
+
+### 32. Graphic Designer
+- **Goal:** Generate any visual graphic programmatically and save it as a real file — no external image APIs, all shapes drawn in code.
+- **Use when:** User says "design a logo", "create an icon", "draw a character", "generate a badge", "make a poster", or describes any visual subject and specifies SVG, PNG, PDF, or WEBP output.
+- **Outputs:** Graphic files in the requested format(s) — SVG (vector), PNG (512×512px default), PDF, or WEBP — saved to the current working directory.
