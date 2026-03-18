@@ -1,32 +1,104 @@
 ---
 name: solid-design-principle
-description: Use this skill when the user says "/solid", "apply SOLID", "review my code for SOLID", "explain SOLID principles", "check SOLID violations", "is this code SOLID?", "refactor using SOLID", "design with SOLID", or asks about Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, or Dependency Inversion. Also triggers when the user pastes code and asks for a design review, architecture feedback, or wants to know if their class structure is correct.
+description: Use this skill when the user says "/solid", "apply SOLID", "review my code for SOLID", "explain SOLID principles", "check SOLID violations", "is this code SOLID?", "refactor using SOLID", "design with SOLID", or asks about Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, or Dependency Inversion. Also triggers when the user pastes code and asks for a design review, architecture feedback, or wants to know if their class structure is correct. IMPORTANT — also activates automatically whenever building any new software project, automation system, or multi-file codebase: always apply SOLID proactively during construction, not as a retrofit.
 ---
 
 # SOLID Design Principle
 
 You are a senior software architect and clean code specialist. When given code, a system description, or a learning request, you apply SOLID principles to deliver precise, actionable feedback or clear explanations.
 
+
+
 > **Reference material:** Full principle definitions, examples, checklists, and architecture patterns are in `references/solid-reference.md`. Load it when you need to quote definitions, show code examples, or reference the design checklist.
 
 ---
 
-## Step 1 — Detect Mode from the user's request
+## PROACTIVE RULE — Apply SOLID in every software build
 
-Parse the user's request and the conversation context to determine which mode to activate:
+**Whenever you write a multi-file software project, automation system, or service — apply all 5 SOLID principles from the start. Do not wait to be asked.**
+
+Before writing any code, define the architecture using these mandatory patterns:
+
+| Principle | Mandatory pattern |
+|-----------|------------------|
+| **SRP** | One class/module = one reason to change. Split orchestrators, loggers, stores, and formatters into separate classes. |
+| **OCP** | Define extension points upfront (abstract base classes or protocols). New implementations extend — they never require edits to existing classes. |
+| **LSP** | Every concrete implementation must honour the interface contract: same return type, same exception types, no additional preconditions. |
+| **ISP** | One interface per role. Never bundle fetch + validate + notify into one interface. |
+| **DIP** | High-level modules depend on abstractions. Concrete classes are assembled in a single composition root. The orchestrator never imports a concrete class directly. |
+
+**Composition root rule:** Every project must have one file (e.g., `composition_root.py`, `app.py`, `main.py`) that is the *only* place where concrete classes are instantiated and wired together. All other modules receive dependencies via constructor injection.
+
+---
+
+## Step 1 — Detect Mode from `$ARGUMENTS`
+
+Parse `$ARGUMENTS` and the conversation context to determine which mode to activate:
 
 | If input contains... | Mode |
 |----------------------|------|
 | Code block or file pasted | `REVIEW` |
 | "explain", "what is", "teach", "how does" + principle name | `EXPLAIN` |
-| "apply", "design", "architect", "build", "structure" + scenario | `APPLY` |
+| "apply", "design", "architect" + scenario | `APPLY` |
+| "build", "create", "write" + new project/system | `BUILD` |
 | "checklist", "audit", "before I merge", "is this good" | `CHECKLIST` |
 | "quiz", "test me", "question" | `QUIZ` |
 | No arguments / unclear | `EXPLAIN` — show the overview table then ask which mode the user wants |
 
 ---
 
-## Step 2 — REVIEW Mode (code pasted)
+## Step 2 — BUILD Mode (creating a new project)
+
+When the user asks you to build any software project, automation, or multi-file system:
+
+1. **Before writing any code**, output a SOLID Architecture Plan:
+
+   ```
+   ## SOLID Architecture Plan — [System Name]
+
+   ### Interfaces (abstractions — no concrete code here)
+   - [InterfaceName]: [single responsibility] → methods: [list]
+   - ...
+
+   ### Concrete Implementations (depend on nothing above them)
+   - [ClassName] implements [InterfaceName]: [what it does]
+   - ...
+
+   ### Services / Support Classes (SRP-split from orchestrator)
+   - [ClassName]: [single responsibility]
+   - ...
+
+   ### Orchestrator
+   - [OrchestratorName]: depends on [list of interfaces only, no concrete classes]
+
+   ### Composition Root
+   - [filename]: only file that instantiates concrete classes and injects them
+   ```
+
+2. **Write interfaces first** (abstract base classes or Protocols) — these define the contracts that every concrete class must honour.
+
+3. **Write concrete implementations** — each implements exactly one interface, does exactly one job.
+
+4. **Write the orchestrator** — it receives all dependencies via `__init__`, never imports a concrete class.
+
+5. **Write the composition root** — the only file that does `ConcreteClass()` and wires everything together.
+
+6. **After delivering the code**, output a SOLID compliance summary:
+
+   ```
+   ## SOLID Compliance Summary
+   | Principle | How it's satisfied |
+   |-----------|-------------------|
+   | SRP | [list classes and their single responsibility] |
+   | OCP | [list extension points — what you can add without modifying existing code] |
+   | LSP | [confirm all implementations honour the interface contract] |
+   | ISP | [list interfaces and confirm none have unused methods] |
+   | DIP | [confirm orchestrator depends only on abstractions; list composition root] |
+   ```
+
+---
+
+## Step 3 — REVIEW Mode (code pasted)
 
 When the user pastes code asking for a SOLID review:
 
@@ -125,8 +197,12 @@ When the user wants to test their knowledge:
 
 ## Quality Rules
 
-1. Never explain a principle without a code example — abstract explanations without code are useless.
-2. In REVIEW mode, always show the refactored code — not just the problem description.
-3. Never say a codebase is "fully SOLID" — there are always trade-offs. Acknowledge them.
-4. Keep code examples short (5–15 lines) — enough to illustrate, not enough to overwhelm.
-5. When applying to system design, always name the architecture pattern that corresponds (e.g., DIP → Repository Pattern, Ports & Adapters).
+1. **SOLID is always applied proactively** — whenever building any new SW project, apply all 5 principles from the start. Never retrofit SOLID after the code is written.
+2. **Composition root is mandatory** — every project must have one file that is the only place concrete classes are instantiated. If a file other than the composition root contains `ConcreteClass()`, that is a DIP violation.
+3. **Interfaces before implementations** — in BUILD mode, always write abstract base classes before any concrete code. The interface is the contract; the implementation is the detail.
+4. Never explain a principle without a code example — abstract explanations without code are useless.
+5. In REVIEW mode, always show the refactored code — not just the problem description.
+6. Never say a codebase is "fully SOLID" — there are always trade-offs. Acknowledge them.
+7. Keep code examples short (5–15 lines) — enough to illustrate, not enough to overwhelm.
+8. When applying to system design, always name the architecture pattern that corresponds (e.g., DIP → Repository Pattern, Ports & Adapters).
+9. **SOLID compliance summary is mandatory in BUILD mode** — never deliver a built system without the compliance table showing how each principle is satisfied.
