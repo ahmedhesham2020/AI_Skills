@@ -158,6 +158,11 @@ cp -r gemini/* ~/.gemini/skills/
 - **Use when:** User says "create a plan for", "build a roadmap for", "I need a plan to", "make a visual plan", or describes any goal and asks for milestones.
 - **Outputs:** Interactive HTML file with circular SVG progress rings per phase, clickable milestone checkboxes, live overall progress bar, and localStorage persistence — works offline in any browser.
 
+### 32. System Architect
+- **Goal:** Design and build any operational system — attendance, goal-tracking, HR, project management, lifestyle, OKR, CRM, and more — grounded in core architectural principles (scalability, CAP theorem, fault tolerance, security by design).
+- **Use when:** User says "build me a system for", "design a system that tracks", "I need a system to manage", "create an attendance system", "make a goal tracker", or describes any structured operational tool they need.
+- **Outputs:** Personal/team scale → interactive HTML dashboard + Excel workbook (with visuals, trackers, progress rings, charts, branded). Enterprise scale → architecture document with tool recommendations, system data model, component map, and five-pillar architectural principles analysis.
+
 ### 31. Prompt Architect
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
