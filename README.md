@@ -167,3 +167,8 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
+
+### 33. Automation Engineer
+- **Goal:** Build complete, production-ready automated systems for any manual or repetitive business process — scripts, schedulers, integrations, error handlers, notifications, and dashboards.
+- **Use when:** User says "automate this process", "we do this manually every day", "build a workflow that", "stop doing X manually", "save time on", or describes any multi-step manual task done repeatedly by staff.
+- **Outputs:** Working code for all components + executed test results (T-01 happy path, T-02 failure/recovery, T-03 security) + Automation Delivery Report with architecture decisions, estimated savings with calculation, and go-live checklist.
