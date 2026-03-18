@@ -160,7 +160,185 @@ def safe_run(func, *args, max_retries=3, **kwargs):
 
 ---
 
-## Step 4 — Phase 3: Test Suite
+## Step 4 — Phase 3: Deployment PDF Guide
+
+After all components are built, generate a self-contained deployment PDF using **fpdf2**.
+This PDF is the handoff document — a field engineer or DevOps person must be able to
+deploy the system to production by following it alone, without reading any code.
+
+**File name:** `[system-name-slug]-deployment-guide.pdf`
+**Location:** current working directory
+
+### PDF structure (sections in order):
+
+**Page 1 — Cover**
+- System name (large title, primary color)
+- "Production Deployment Guide"
+- Date generated
+- Status badge: "✅ All tests passing — ready for deployment"
+
+**Page 2 — Architecture Overview (Visual Diagram)**
+
+Draw the component flow diagram using fpdf2 shapes — no external images:
+- Each component = colored rectangle with component name (white bold text inside)
+- Arrows between components = lines with an arrowhead triangle at the destination
+- Color code by component type:
+  - Trigger/Scheduler: navy `#1F4E79`
+  - Orchestrator: dark green `#1D6035`
+  - Data Processor: dark orange `#833C00`
+  - Integration Layer: purple `#4C2882`
+  - Error Handler: dark red `#8B0000`
+  - Notification Hook: teal `#005F73`
+  - Dashboard: slate `#2E4057`
+- Below diagram: legend table mapping color → component type
+
+**Page 3 — Prerequisites**
+
+Two sections:
+
+*Software Requirements* — table with columns: Software | Version | Install Command
+- Python 3.10+, pip, git, and any process-specific tools (e.g., systemd, Docker)
+
+*Python Dependencies* — fenced code block:
+```
+pip install [all packages used by this system]
+```
+
+*Environment Variables* — table with columns: Variable | Description | Example Value
+- One row per `os.environ[...]` reference found in the code
+- Mark sensitive vars (API keys, passwords) with ⚠ in the Description column
+
+**Page 4 — Step-by-Step Deployment**
+
+Numbered steps with:
+- Step heading in bold primary color
+- Step body text in normal weight
+- Code blocks on gray background (`#F0F0F0`) with monospace font
+- Each step includes: what to do + the exact command to run
+
+Required steps (customize per system):
+1. Clone / copy the project to the server
+2. Create and activate a virtual environment
+3. Install dependencies
+4. Set environment variables (show `export VAR=value` pattern)
+5. Test credentials (run a quick connectivity check)
+6. Run the automation manually once to verify
+7. Register the scheduler as a systemd service (show full unit file)
+8. Enable and start the service
+9. Verify the service is running
+
+**Page 5 — Verification Checklist**
+
+Checkbox table (two columns: Check | Expected Result):
+- Scheduler service shows `active (running)` in `systemctl status`
+- First run completes without error in the log file
+- Notification received by the correct recipient
+- Dashboard opens and shows the run record
+- Duplicate detection: re-triggering skips already-processed items
+- Error scenario: disconnecting a service triggers a failure alert
+
+**Page 6 — Dashboard Access & Rollback**
+
+*Dashboard Access:*
+- Full path to the HTML dashboard file
+- How to open it (browser command or URL if served)
+- Screenshot description: "Run history table shows last N runs with ✅/❌ status"
+
+*Rollback Plan:*
+- How to stop the automation (`systemctl stop [service]`)
+- How to disable it permanently (`systemctl disable [service]`)
+- The manual process steps that were replaced (list them so staff can revert)
+
+**Page 7 — Architecture Decisions Summary**
+
+Table: Principle | Decision | Justification
+- Copy from Step 2c — same 5 rows, reformatted for the PDF
+
+---
+
+### PDF generation code pattern:
+
+```python
+from fpdf import FPDF
+import os
+
+class DeploymentGuide(FPDF):
+    PRIMARY = (31, 78, 121)    # #1F4E79 navy
+    GRAY_BG = (240, 240, 240)  # #F0F0F0 code block background
+
+    def header(self):
+        self.set_font("Helvetica", "B", 9)
+        self.set_text_color(150, 150, 150)
+        self.cell(0, 8, f"[System Name] — Production Deployment Guide", ln=True, align="R")
+        self.ln(2)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font("Helvetica", "I", 8)
+        self.set_text_color(150, 150, 150)
+        self.cell(0, 10, f"Page {self.page_no()}", align="C")
+
+    def section_title(self, text):
+        self.set_font("Helvetica", "B", 14)
+        self.set_text_color(*self.PRIMARY)
+        self.cell(0, 10, text, ln=True)
+        self.set_text_color(0, 0, 0)
+        self.ln(2)
+
+    def code_block(self, text):
+        self.set_fill_color(*self.GRAY_BG)
+        self.set_font("Courier", "", 9)
+        self.multi_cell(0, 6, text, fill=True, border=1)
+        self.set_font("Helvetica", "", 10)
+        self.ln(3)
+
+    def draw_component_box(self, x, y, w, h, label, color_rgb):
+        r, g, b = color_rgb
+        self.set_fill_color(r, g, b)
+        self.set_draw_color(r, g, b)
+        self.rect(x, y, w, h, style="F")
+        self.set_font("Helvetica", "B", 8)
+        self.set_text_color(255, 255, 255)
+        self.set_xy(x, y + h/2 - 3)
+        self.cell(w, 6, label, align="C")
+        self.set_text_color(0, 0, 0)
+
+    def draw_arrow(self, x1, y1, x2, y2):
+        """Draw a line with an arrowhead from (x1,y1) to (x2,y2)."""
+        self.set_draw_color(80, 80, 80)
+        self.line(x1, y1, x2, y2)
+        # Arrowhead: small triangle at (x2, y2) pointing right
+        self.set_fill_color(80, 80, 80)
+        self.polygon(
+            [(x2, y2), (x2 - 4, y2 - 2), (x2 - 4, y2 + 2)],
+            style="F"
+        )
+
+
+pdf = DeploymentGuide()
+pdf.set_margins(20, 20, 20)
+pdf.set_auto_page_break(auto=True, margin=20)
+
+# ... build each page ...
+
+pdf.output("[system-name-slug]-deployment-guide.pdf")
+print(f"PDF saved: {os.path.abspath('[system-name-slug]-deployment-guide.pdf')}")
+```
+
+### After generating the PDF:
+
+Verify it exists and is non-empty:
+```python
+path = "[system-name-slug]-deployment-guide.pdf"
+size = os.path.getsize(path) if os.path.exists(path) else 0
+print(f"{'✅' if size > 0 else '❌'} {os.path.abspath(path)} ({size:,} bytes)")
+```
+
+Then open it: `open [system-name-slug]-deployment-guide.pdf`
+
+---
+
+## Step 5 — Phase 4: Test Suite
 
 Write and **execute** a test suite covering at minimum:
 
@@ -193,7 +371,7 @@ Write and **execute** a test suite covering at minimum:
 
 ---
 
-## Step 5 — Fix Loop
+## Step 6 — Fix Loop
 
 After running all tests, check: are there any FAIL results?
 
@@ -211,7 +389,7 @@ This loop has no maximum iteration count — keep fixing until the suite is gree
 
 ---
 
-## Step 6 — Phase 4: Automation Delivery Report
+## Step 7 — Phase 4: Automation Delivery Report
 
 Once all tests pass, generate the final Automation Delivery Report.
 
@@ -282,3 +460,5 @@ Once all tests pass, generate the final Automation Delivery Report.
 8. **The Delivery Report is mandatory** — a system without a signed-off report is not deployed.
 9. **Retry and logging are non-negotiable** — every automation must have both, regardless of process complexity.
 10. **Cost savings must show the calculation** — a number without arithmetic is an estimate, not a justification.
+11. **Deployment PDF is mandatory** — no automation is deliverable without the PDF guide. A system with no PDF is not done.
+12. **PDF must include a visual architecture diagram** — drawn using fpdf2 rectangles and arrows, one box per component, color-coded by type. A PDF with only text is not acceptable.
