@@ -153,7 +153,12 @@ cp -r gemini/* ~/.gemini/skills/
 - **Use when:** User says "teach me", "I want to learn", "mentor me on", "roadmap for", or provides any topic name and asks to start learning it.
 - **Outputs:** Pareto-filtered learning plan (Core 20% + Bonus sessions) + interactive session-by-session mentorship with exercises, feedback, and a bonus unlock gate.
 
-### 30. Prompt Architect
+### 30. Visual Planner
+- **Goal:** Search the web + use LLM knowledge to build a milestone roadmap for any goal, then generate a self-contained interactive HTML tracking dashboard.
+- **Use when:** User says "create a plan for", "build a roadmap for", "I need a plan to", "make a visual plan", or describes any goal and asks for milestones.
+- **Outputs:** Interactive HTML file with circular SVG progress rings per phase, clickable milestone checkboxes, live overall progress bar, and localStorage persistence — works offline in any browser.
+
+### 31. Prompt Architect
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
