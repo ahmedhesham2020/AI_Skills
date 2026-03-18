@@ -227,9 +227,11 @@ Each ring text: `<div class="ring-text" id="ring-text-p0">0/N</div>`
 
 ---
 
-## Step 5 — Confirm Delivery
+## Step 5 — Open and Confirm Delivery
 
-After writing the file, confirm to the user:
+After writing the file, open it in the default browser using the system's open command.
+
+Then confirm to the user:
 
 ```
 ✅ Your visual plan has been created: [filename].html
@@ -241,6 +243,7 @@ Open it in any browser to start tracking your progress.
 • Click any milestone to mark it complete
 • Progress rings update live per phase
 • Your progress is saved automatically (localStorage)
+• Opened automatically in your browser
 ```
 
 ---

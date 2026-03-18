@@ -230,9 +230,15 @@ Each ring SVG circle must have `id="ring-p0"` and ring text `id="ring-text-p0"`.
 
 ---
 
-## Step 5 — Confirm Delivery
+## Step 5 — Open and Confirm Delivery
 
-After writing the file, confirm to the user:
+After writing the file, run this Bash command to open it in the default browser:
+
+```bash
+open [filename].html
+```
+
+Then confirm to the user:
 
 ```
 ✅ Your visual plan has been created: [filename].html
@@ -244,6 +250,7 @@ Open it in any browser to start tracking your progress.
 • Click any milestone to mark it complete
 • Progress rings update live per phase
 • Your progress is saved automatically (localStorage)
+• Opened automatically in your browser
 
 Phases:
   Phase 1 — [Name]: [N] milestones
