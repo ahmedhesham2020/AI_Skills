@@ -148,7 +148,12 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Apply professional font and color themes to artifacts — 10 presets plus custom.
 - **Outputs:** Consistently themed presentations, documents, and web artifacts.
 
-### 29. Prompt Architect
+### 29. Learning Mentor
+- **Goal:** Search the web for a current learning roadmap on any topic, filter it through the Pareto principle, and guide the user interactively from beginner to expert one session at a time.
+- **Use when:** User says "teach me", "I want to learn", "mentor me on", "roadmap for", or provides any topic name and asks to start learning it.
+- **Outputs:** Pareto-filtered learning plan (Core 20% + Bonus sessions) + interactive session-by-session mentorship with exercises, feedback, and a bonus unlock gate.
+
+### 30. Prompt Architect
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
