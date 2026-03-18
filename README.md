@@ -171,4 +171,4 @@ cp -r gemini/* ~/.gemini/skills/
 ### 33. Automation Engineer
 - **Goal:** Build complete, production-ready automated systems for any manual or repetitive business process — scripts, schedulers, integrations, error handlers, notifications, and dashboards.
 - **Use when:** User says "automate this process", "we do this manually every day", "build a workflow that", "stop doing X manually", "save time on", or describes any multi-step manual task done repeatedly by staff.
-- **Outputs:** Working code for all components + executed test results (T-01 happy path, T-02 failure/recovery, T-03 security) + Automation Delivery Report with architecture decisions, estimated savings with calculation, and go-live checklist.
+- **Outputs:** Working code for all components + 7-page deployment PDF guide (visual architecture diagram, prerequisites, step-by-step deployment, verification checklist, rollback plan) + executed test results (T-01 happy path, T-02 failure/recovery, T-03 security) + Automation Delivery Report with architecture decisions, estimated savings with calculation, and go-live checklist.
