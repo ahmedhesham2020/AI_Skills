@@ -59,25 +59,7 @@ Combine web search findings with internal LLM knowledge to build a structured pl
 - Effort: realistic time estimate (e.g., "2–3 days", "1 week", "1 hour")
 - A unique ID: format `p[phase_index]-m[milestone_index]` (e.g., `p0-m0`, `p0-m1`, `p1-m0`)
 
-**Show the plan outline to the user before generating HTML:**
-
-```
-## 📋 Your Plan: [Goal]
-
-**Phase 1 — [Name]**
-- [ ] [Milestone title] (~[effort])
-- [ ] [Milestone title] (~[effort])
-
-**Phase 2 — [Name]**
-- [ ] [Milestone title] (~[effort])
-...
-
-Total: [N] milestones across [N] phases
-
-Type **"generate"** to create your interactive HTML plan, or tell me what to change.
-```
-
-Wait for the user to confirm or request changes before proceeding to Step 4.
+Once the milestone list is complete, proceed immediately to Step 4 — do not ask for confirmation.
 
 ---
 
@@ -269,7 +251,7 @@ Open it in any browser to start tracking your progress.
 2. Every milestone must have a unique id in the format `p[i]-m[j]` — no duplicates.
 3. The localStorage key prefix must be the goal slug — never use a hardcoded generic key.
 4. Ring SVG must use `transform: rotate(-90deg)` so the fill starts from the top.
-5. Never skip the plan preview in Step 3 — the user must confirm the milestone list before HTML is generated.
+5. Never wait for user confirmation between Step 3 and Step 4 — generate the HTML immediately after synthesizing the plan.
 6. The completed state must be visually unambiguous: strikethrough + green color + filled checkbox — all three.
 7. If the user requests changes in Step 3, update and re-show the preview before generating.
 8. File name must be kebab-case from the goal — never generic names like `plan.html`.
