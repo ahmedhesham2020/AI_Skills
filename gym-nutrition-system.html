@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym &amp; Nutrition System</title>
+<style>
+:root {
+  --primary: #1F4E79; --secondary: #2E75B6; --accent: #FFD700;
+  --bg: #0f1117; --surface: #1e293b; --surface2: #263448;
+  --border: #334155; --text: #e2e8f0; --muted: #94a3b8; --dim: #64748b;
+  --green: #22c55e; --red: #ef4444; --amber: #f59e0b;
+  --font: 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+.app-header { background: linear-gradient(135deg,var(--primary),var(--secondary)); padding: 1.25rem 2rem; text-align: center; border-bottom: 2px solid var(--accent); }
+.app-header h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
+.app-header .sub { color: rgba(255,255,255,.7); font-size: .82rem; margin-top: .2rem; }
+.app-nav { display: flex; background: #0d1520; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.nav-tab { padding: .8rem 1.3rem; font-size: .82rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; color: var(--muted); white-space: nowrap; transition: all .2s; }
+.nav-tab:hover { color: var(--text); background: var(--surface); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+.tab { display: none; padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+.tab.active { display: block; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; margin-bottom: 1.2rem; }
+.card-title { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+.g2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 1.2rem; }
+.g3 { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 1.1rem; }
+.g4 { display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: 1rem; }
+.stat { background: var(--surface2); border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid var(--border); }
+.stat .val { font-size: 1.55rem; font-weight: 700; color: var(--accent); }
+.stat .lbl { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
+.fl { display: flex; gap: .6rem; }
+label.lbl2 { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: .35rem; text-transform: uppercase; letter-spacing: .4px; }
+input.fi, select.fi, textarea.fi { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: .6rem .85rem; color: var(--text); font-size: .88rem; font-family: var(--font); outline: none; transition: border-color .2s; }
+input.fi:focus, select.fi:focus, textarea.fi:focus { border-color: var(--secondary); }
+select.fi option { background: var(--surface); }
+.fg { margin-bottom: .9rem; }
+.btn { padding: .6rem 1.3rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-family: var(--font); }
+.btn-p { background: var(--primary); color: #fff; } .btn-p:hover { background: var(--secondary); }
+.btn-a { background: var(--accent); color: #1a1a1a; } .btn-a:hover { background: #e6c200; }
+.btn-g { background: transparent; border: 1px solid var(--border); color: var(--muted); } .btn-g:hover { border-color: var(--secondary); color: var(--text); }
+.btn-sm { padding: .35rem .8rem; font-size: .78rem; }
+.badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: .7rem; font-weight: 700; }
+.b-str { background: #1e3a5f; color: #60a5fa; } .b-hyp { background: #3b1f3f; color: #c084fc; }
+.b-car { background: #1f3a1f; color: #4ade80; } .b-hit { background: #3f2a00; color: #fbbf24; }
+.b-mob { background: #1f3030; color: #22d3ee; } .b-pow { background: #3f1f1f; color: #f87171; }
+.b-cal { background: #1f3020; color: #86efac; }
+.pb-wrap { background: var(--border); border-radius: 99px; height: 7px; overflow: hidden; margin-top: .35rem; }
+.pb { height: 100%; border-radius: 99px; transition: width .5s ease; background: linear-gradient(90deg,var(--primary),var(--secondary)); }
+.pb.green { background: linear-gradient(90deg,#16a34a,#22c55e); }
+.pb.blue { background: linear-gradient(90deg,#1d4ed8,#3b82f6); }
+.ring-wrap { position: relative; display: inline-block; }
+.prog-ring { transform: rotate(-90deg); display: block; }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.ring-pct { font-size: 1rem; font-weight: 700; }
+.ring-lbl { font-size: .6rem; color: var(--muted); text-align: center; }
+.day-card { background: var(--surface2); border-radius: 10px; padding: 1rem; border: 1px solid var(--border); }
+.day-title { font-size: .88rem; font-weight: 700; margin-bottom: .4rem; }
+.ex-list { list-style: none; }
+.ex-item { padding: .25rem 0; font-size: .8rem; color: var(--muted); border-bottom: 1px dashed var(--border); }
+.ex-item:last-child { border-bottom: none; }
+.macro-row { display: flex; justify-content: space-between; padding: .4rem 0; border-bottom: 1px solid var(--border); }
+.macro-row:last-child { border-bottom: none; }
+.macro-name { font-size: .83rem; color: var(--muted); }
+.macro-val { font-size: .88rem; font-weight: 700; }
+.mv-p { color: #60a5fa; } .mv-c { color: #4ade80; } .mv-f { color: #fbbf24; } .mv-k { color: var(--accent); }
+.wcup { width: 38px; height: 38px; border-radius: 8px; border: 2px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all .2s; user-select: none; }
+.wcup.on { background: #1e40af; border-color: #3b82f6; }
+.water-row { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .7rem; }
+.ci-entry { background: var(--surface2); border-radius: 10px; padding: .9rem 1rem; margin-bottom: .6rem; border-left: 3px solid var(--secondary); }
+.ci-date { font-size: .72rem; color: var(--muted); }
+.ci-wt { font-size: 1.05rem; font-weight: 700; color: var(--accent); }
+.ci-note { font-size: .8rem; color: var(--muted); margin-top: .25rem; }
+.dtable { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.dtable th { background: var(--primary); color: #fff; padding: .6rem .8rem; text-align: left; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.dtable td { padding: .55rem .8rem; border-bottom: 1px solid var(--border); }
+.dtable tr:hover td { background: var(--surface2); }
+.dtable tr:last-child td { border-bottom: none; }
+.ms { display: flex; align-items: flex-start; gap: .7rem; padding: .65rem .75rem; border-radius: 9px; cursor: pointer; border: 1px solid transparent; transition: all .2s; user-select: none; }
+.ms:hover { background: var(--surface2); border-color: var(--border); }
+.ms.done { background: #0d2010; border-color: #166534; }
+.ms-cb { width: 20px; height: 20px; border-radius: 5px; border: 2px solid #475569; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .2s; font-size: .7rem; font-weight: 700; color: transparent; }
+.ms.done .ms-cb { background: #16a34a; border-color: #16a34a; color: #fff; }
+.ms-title { font-size: .85rem; font-weight: 500; color: var(--text); }
+.ms.done .ms-title { text-decoration: line-through; color: var(--green); }
+.alert { padding: .7rem 1rem; border-radius: 8px; font-size: .83rem; margin-bottom: 1rem; }
+.ai { background: #1e3a5f40; border: 1px solid var(--secondary); color: #93c5fd; }
+.as { background: #14290a; border: 1px solid #166534; color: #4ade80; }
+@media (max-width: 600px) { .tab { padding: 1rem; } }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>💪 Gym &amp; Nutrition System</h1>
+  <div class="sub">Full-Year Personalized Training &amp; Nutrition Dashboard</div>
+</header>
+
+<nav class="app-nav">
+  <div class="nav-tab active" onclick="showTab('dashboard')">📊 Dashboard</div>
+  <div class="nav-tab" onclick="showTab('config')">⚙️ Config Wizard</div>
+  <div class="nav-tab" onclick="showTab('training')">🏋️ Training</div>
+  <div class="nav-tab" onclick="showTab('nutrition')">🥗 Nutrition</div>
+  <div class="nav-tab" onclick="showTab('checkin')">📝 Check-ins</div>
+  <div class="nav-tab" onclick="showTab('measurements')">📏 Measurements</div>
+</nav>
+
+<!-- ── DASHBOARD ──────────────────────────────────────────────────── -->
+<section class="tab active" id="tab-dashboard">
+  <div class="g4" style="margin-bottom:1.2rem;">
+    <div class="stat"><div class="val" id="d-sessions">0</div><div class="lbl">Sessions This Week</div></div>
+    <div class="stat"><div class="val" id="d-checkins">0</div><div class="lbl">Total Check-ins</div></div>
+    <div class="stat"><div class="val" id="d-weight">--</div><div class="lbl">Current Weight (kg)</div></div>
+    <div class="stat"><div class="val" id="d-program">--</div><div class="lbl">Active Program</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">🎯 Progress Rings</div>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;">
+        <div style="text-align:center;">
+          <div class="ring-wrap">
+            <svg class="prog-ring" width="90" height="90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#334155" stroke-width="10"/>
+              <circle id="r-train" cx="60" cy="60" r="50" fill="none" stroke="#2E75B6" stroke-width="10" stroke-linecap="round"/>
+            </svg>
+            <div class="ring-center"><div class="ring-pct" id="r-train-pct">0%</div><div class="ring-lbl">Training</div></div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div class="ring-wrap">
+            <svg class="prog-ring" width="90" height="90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#334155" stroke-width="10"/>
+              <circle id="r-water" cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="10" stroke-linecap="round"/>
+            </svg>
+            <div class="ring-center"><div class="ring-pct" id="r-water-pct">0%</div><div class="ring-lbl">Hydration</div></div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div class="ring-wrap">
+            <svg class="prog-ring" width="90" height="90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#334155" stroke-width="10"/>
+              <circle id="r-year" cx="60" cy="60" r="50" fill="none" stroke="#FFD700" stroke-width="10" stroke-linecap="round"/>
+            </svg>
+            <div class="ring-center"><div class="ring-pct" id="r-year-pct">0%</div><div class="ring-lbl">Year Progress</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 Weight Trend</div>
+      <svg id="wt-chart" width="100%" height="130" viewBox="0 0 380 130" style="overflow:visible;"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗓️ Year Check-in Map</div>
+    <div id="year-map" style="overflow-x:auto;"></div>
+  </div>
+
+  <div class="card" id="d-prog-card" style="display:none;">
+    <div class="card-title">⚡ Active Program</div>
+    <div id="d-prog-content"></div>
+  </div>
+</section>
+
+<!-- ── CONFIG WIZARD ─────────────────────────────────────────────── -->
+<section class="tab" id="tab-config">
+  <div class="alert ai">Fill in your details and click <strong>Generate My Program</strong>. The system calculates your TDEE, macros, water target, and builds a full training split.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">👤 Body Stats</div>
+      <div class="fg"><label class="lbl2">Age</label><input type="number" class="fi" id="c-age" placeholder="e.g. 28" min="14" max="80"></div>
+      <div class="fg"><label class="lbl2">Gender</label>
+        <select class="fi" id="c-gender"><option value="male">Male</option><option value="female">Female</option></select></div>
+      <div class="fg"><label class="lbl2">Weight (kg)</label><input type="number" class="fi" id="c-weight" placeholder="e.g. 80" step="0.5"></div>
+      <div class="fg"><label class="lbl2">Height (cm)</label><input type="number" class="fi" id="c-height" placeholder="e.g. 178"></div>
+      <div class="fg"><label class="lbl2">Body Fat % (optional)</label><input type="number" class="fi" id="c-bf" placeholder="e.g. 18"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Goals &amp; Preferences</div>
+      <div class="fg"><label class="lbl2">Primary Goal</label>
+        <select class="fi" id="c-goal">
+          <option value="muscle_gain">Muscle Gain (Hypertrophy)</option>
+          <option value="fat_loss">Fat Loss</option>
+          <option value="strength">Strength / Powerlifting</option>
+          <option value="athletic">Athletic Performance</option>
+          <option value="general">General Fitness &amp; Health</option>
+          <option value="calisthenics">Calisthenics / Bodyweight</option>
+        </select></div>
+      <div class="fg"><label class="lbl2">Fitness Level</label>
+        <select class="fi" id="c-level">
+          <option value="beginner">Beginner (&lt; 1 year)</option>
+          <option value="intermediate">Intermediate (1–3 years)</option>
+          <option value="advanced">Advanced (3+ years)</option>
+        </select></div>
+      <div class="fg"><label class="lbl2">Training Days / Week</label>
+        <select class="fi" id="c-days">
+          <option value="3">3 days</option><option value="4" selected>4 days</option>
+          <option value="5">5 days</option><option value="6">6 days</option>
+        </select></div>
+      <div class="fg"><label class="lbl2">Activity Level (for TDEE)</label>
+        <select class="fi" id="c-activity">
+          <option value="1.2">Sedentary (desk job)</option>
+          <option value="1.375">Lightly Active (1–3 days)</option>
+          <option value="1.55" selected>Moderately Active (3–5 days)</option>
+          <option value="1.725">Very Active (6–7 days)</option>
+          <option value="1.9">Extra Active (twice daily)</option>
+        </select></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:.5rem;">
+    <button class="btn btn-a" onclick="generateProgram()" style="font-size:.95rem;padding:.8rem 2.5rem;">⚡ Generate My Program</button>
+  </div>
+  <div id="c-result" style="margin-top:1.5rem;"></div>
+</section>
+
+<!-- ── TRAINING ───────────────────────────────────────────────────── -->
+<section class="tab" id="tab-training">
+  <div id="t-empty" class="alert ai">Go to <strong>Config Wizard</strong> first to generate your training program.</div>
+  <div id="t-content" style="display:none;">
+    <div class="g3" id="t-split-grid"></div>
+    <div class="card" style="margin-top:1.2rem;">
+      <div class="card-title">✅ This Week — Mark Sessions Complete</div>
+      <div id="t-session-log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NUTRITION ─────────────────────────────────────────────────── -->
+<section class="tab" id="tab-nutrition">
+  <div id="n-empty" class="alert ai">Go to <strong>Config Wizard</strong> first to calculate your nutrition targets.</div>
+  <div id="n-content" style="display:none;">
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">🔥 Daily Macro Targets</div>
+        <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;">
+          <div style="flex-shrink:0;position:relative;">
+            <svg id="macro-donut" width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg);display:block;"></svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:1.1rem;font-weight:800;" id="n-kcal">--</div>
+              <div style="font-size:.65rem;color:var(--muted);">kcal/day</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:160px;">
+            <div class="macro-row"><span class="macro-name">Protein</span><span class="macro-val mv-p" id="n-protein">-- g</span></div>
+            <div class="macro-row"><span class="macro-name">Carbs</span><span class="macro-val mv-c" id="n-carbs">-- g</span></div>
+            <div class="macro-row"><span class="macro-name">Fat</span><span class="macro-val mv-f" id="n-fat">-- g</span></div>
+            <div class="macro-row"><span class="macro-name">TDEE</span><span class="macro-val mv-k" id="n-tdee">-- kcal</span></div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;"><span>Protein</span><span id="n-pp">0%</span></div>
+          <div class="pb-wrap"><div class="pb" id="n-pb-p" style="background:#60a5fa;width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;margin-top:.5rem;"><span>Carbs</span><span id="n-pc">0%</span></div>
+          <div class="pb-wrap"><div class="pb" id="n-pb-c" style="background:#4ade80;width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;margin-top:.5rem;"><span>Fat</span><span id="n-pf">0%</span></div>
+          <div class="pb-wrap"><div class="pb" id="n-pb-f" style="background:#fbbf24;width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💧 Daily Water Intake</div>
+        <div style="font-size:.83rem;color:var(--muted);margin-bottom:.4rem;">
+          Target: <span id="n-wt-target" style="color:var(--text);font-weight:700;">--</span> glasses &nbsp;·&nbsp;
+          <span id="n-wt-filled" style="color:var(--accent);font-weight:700;">0</span> filled today
+        </div>
+        <div class="water-row" id="water-cups"></div>
+        <div style="margin-top:.85rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;"><span>Progress</span><span id="w-pct">0%</span></div>
+          <div class="pb-wrap"><div class="pb blue" id="w-bar" style="width:0%;"></div></div>
+        </div>
+        <button class="btn btn-g btn-sm" onclick="resetWater()" style="margin-top:.75rem;">Reset Today</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🥗 Weekly Meal Plan</div>
+      <div class="g3" id="n-meal-plan"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CHECK-INS ─────────────────────────────────────────────────── -->
+<section class="tab" id="tab-checkin">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">📝 Log Weekly Check-in</div>
+      <div class="fg"><label class="lbl2">Date</label><input type="date" class="fi" id="ci-date"></div>
+      <div class="fg"><label class="lbl2">Body Weight (kg)</label><input type="number" class="fi" id="ci-wt" placeholder="e.g. 79.5" step="0.1"></div>
+      <div class="fg"><label class="lbl2">Sessions Completed This Week</label><input type="number" class="fi" id="ci-sess" placeholder="e.g. 4" min="0" max="7"></div>
+      <div class="fg"><label class="lbl2">Energy Level: <span id="ci-e-val" style="color:var(--accent);">7</span>/10</label>
+        <input type="range" class="fi" id="ci-energy" min="1" max="10" value="7" oninput="document.getElementById('ci-e-val').textContent=this.value" style="padding:0;height:22px;"></div>
+      <div class="fg"><label class="lbl2">Notes</label><textarea class="fi" id="ci-notes" rows="3" placeholder="PRs, struggles, mood, changes…" style="resize:vertical;"></textarea></div>
+      <button class="btn btn-p" onclick="logCheckin()" style="width:100%;">Save Check-in</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Check-in History</div>
+      <div id="ci-history" style="max-height:480px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MEASUREMENTS ──────────────────────────────────────────────── -->
+<section class="tab" id="tab-measurements">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">📏 Log Body Measurements</div>
+      <div class="fg"><label class="lbl2">Date</label><input type="date" class="fi" id="m-date"></div>
+      <div class="g2" style="gap:.7rem;">
+        <div class="fg"><label class="lbl2">Chest (cm)</label><input type="number" class="fi" id="m-chest" step="0.5" placeholder="100"></div>
+        <div class="fg"><label class="lbl2">Waist (cm)</label><input type="number" class="fi" id="m-waist" step="0.5" placeholder="82"></div>
+        <div class="fg"><label class="lbl2">Hips (cm)</label><input type="number" class="fi" id="m-hips" step="0.5" placeholder="94"></div>
+        <div class="fg"><label class="lbl2">Arms (cm)</label><input type="number" class="fi" id="m-arms" step="0.5" placeholder="35"></div>
+        <div class="fg"><label class="lbl2">Thighs (cm)</label><input type="number" class="fi" id="m-thighs" step="0.5" placeholder="55"></div>
+        <div class="fg"><label class="lbl2">Shoulders (cm)</label><input type="number" class="fi" id="m-shoulders" step="0.5" placeholder="120"></div>
+      </div>
+      <button class="btn btn-p" onclick="logMeasurement()" style="width:100%;">Save Measurements</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Measurement History</div>
+      <div style="overflow-x:auto;">
+        <table class="dtable">
+          <thead><tr><th>Date</th><th>Chest</th><th>Waist</th><th>Hips</th><th>Arms</th><th>Thighs</th><th></th></tr></thead>
+          <tbody id="m-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📈 Waist &amp; Arms Trend</div>
+    <svg id="m-chart" width="100%" height="150" viewBox="0 0 800 150" style="overflow:visible;"></svg>
+  </div>
+</section>
+
+<script>
+const SLUG = 'gns_v1';
+const CIRC = 2 * Math.PI * 50; // r=50
+
+// ── PROGRAMS ─────────────────────────────────────────────────────────
+const PROG = {
+  muscle_gain: {
+    name:'Hypertrophy Builder', style:'b-hyp',
+    desc:'Progressive overload 3–5×8–12 reps. Compound lifts + isolation. +350 kcal surplus.',
+    mult:1.8, calAdj:350,
+    splits:{
+      3:['Push (Chest/Shoulder/Tri)','Pull (Back/Biceps)','Legs + Core'],
+      4:['Chest + Triceps','Back + Biceps','Shoulders + Core','Legs'],
+      5:['Chest','Back','Shoulders','Arms','Legs'],
+      6:['Push A','Pull A','Legs A','Push B','Pull B','Legs B']
+    },
+    ex:{
+      'Push (Chest/Shoulder/Tri)':['Bench Press 4×8–10','Incline DB Press 3×10–12','OHP 3×8–10','Lateral Raises 4×12–15','Tricep Pushdown 3×12–15','Chest Fly 3×12'],
+      'Pull (Back/Biceps)':['Deadlift 3×5','Pull-ups 4×8–10','Barbell Row 3×8–10','Cable Row 3×12','Face Pulls 3×15','Barbell Curl 3×10–12'],
+      'Legs + Core':['Squat 4×8–10','Romanian DL 3×10','Leg Press 3×12','Leg Curl 3×12','Calf Raises 4×15','Plank 3×60s'],
+      'Chest + Triceps':['Bench Press 4×6–10','Incline Press 3×10','Chest Fly 3×12','Dips 3×10','Skull Crushers 3×12','Pushdowns 3×15'],
+      'Back + Biceps':['Deadlift 3×5','Pull-ups 4×max','Barbell Row 4×8','Cable Row 3×12','Barbell Curl 3×10','Hammer Curl 3×12'],
+      'Shoulders + Core':['OHP 4×8','Arnold Press 3×10','Lateral Raises 4×15','Rear Delt Fly 3×15','Ab Wheel 3×10','Hanging Leg Raise 3×12'],
+      'Legs':['Squat 4×8–10','Leg Press 3×12','RDL 3×10','Leg Curl 3×12','Leg Extension 3×15','Calf Raises 4×20'],
+      'Chest':['Bench Press 5×5','Incline Press 4×8','Cable Fly 3×12','Pushups 3×15','Dips 3×10'],
+      'Back':['Deadlift 4×5','Pull-ups 4×8','T-Bar Row 3×10','Lat Pulldown 3×12','Face Pulls 3×15'],
+      'Shoulders':['OHP 5×5','Arnold Press 4×10','Lateral Raises 4×15','Front Raises 3×12','Shrugs 3×15'],
+      'Arms':['Barbell Curl 4×10','Hammer Curl 3×12','Concentration Curl 3×15','Skull Crushers 3×12','Tricep Pushdown 3×15','Dips 3×10'],
+      'Push A':['Bench Press 4×8–10','OHP 3×10','Incline DB 3×12','Lateral Raises 3×15','Tricep Pushdown 3×12'],
+      'Pull A':['Deadlift 3×5','Pull-ups 4×8','Cable Row 3×12','Face Pulls 3×15','Barbell Curl 3×10'],
+      'Legs A':['Squat 4×8','Leg Press 3×12','Leg Curl 3×12','Calf Raises 4×15','Planks 3×60s'],
+      'Push B':['Incline Press 4×10','DB OHP 3×12','Cable Fly 3×15','Arnold Press 3×12','Dips 3×10'],
+      'Pull B':['Weighted Pull-ups 4×6','T-Bar Row 3×10','Lat Pulldown 3×12','Barbell Curl 3×10','Hammer Curl 3×12'],
+      'Legs B':['Front Squat 4×8','Bulgarian Split Squat 3×10','RDL 3×10','Leg Extension 3×15','Calf Raises 4×20']
+    },
+    meals:[
+      {m:'Breakfast',i:['6 eggs scrambled','2 slices whole grain toast','1 banana','Whey protein 30g']},
+      {m:'Mid-Morning',i:['Greek yogurt 200g','Mixed nuts 30g','1 apple']},
+      {m:'Lunch',i:['200g chicken breast','150g brown rice','Mixed veg 200g','Olive oil dressing']},
+      {m:'Pre-Workout',i:['1 banana','30g oats','Black coffee']},
+      {m:'Post-Workout',i:['Whey protein 40g','100g rice cakes','Creatine 5g']},
+      {m:'Dinner',i:['200g salmon or beef','300g sweet potato','Broccoli steamed','½ avocado']},
+      {m:'Before Bed',i:['Casein protein 30g or cottage cheese 200g','Handful almonds']}
+    ]
+  },
+  fat_loss: {
+    name:'Fat Loss Recomp', style:'b-hit',
+    desc:'Strength to preserve muscle + HIIT to burn fat. –500 kcal deficit. High protein.',
+    mult:2.2, calAdj:-500,
+    splits:{
+      3:['Full Body Strength A','Full Body Strength B','HIIT + Cardio'],
+      4:['Upper Strength','Lower Strength','HIIT Circuit','Active Recovery'],
+      5:['Push + HIIT','Pull + Core','Legs','HIIT Circuit','Cardio + Mobility'],
+      6:['Upper A','Lower A','HIIT A','Upper B','Lower B','HIIT B']
+    },
+    ex:{
+      'Full Body Strength A':['Squat 3×8','Bench Press 3×8','Deadlift 3×5','OHP 3×10','Barbell Row 3×10','Plank 3×45s'],
+      'Full Body Strength B':['Front Squat 3×8','Incline Press 3×10','RDL 3×10','DB OHP 3×12','Pull-ups 3×max','Ab Circuit 10min'],
+      'HIIT + Cardio':['Warm-up 5min','Sprints 10×30s/30s rest','Jump Squats 3×20','Burpees 3×15','Mountain Climbers 3×30s','Cool-down 5min'],
+      'Upper Strength':['Bench Press 4×8','Barbell Row 4×8','OHP 3×10','Pull-ups 3×max','Face Pulls 3×15','Tricep Dips 3×12'],
+      'Lower Strength':['Squat 4×8','RDL 3×10','Leg Press 3×12','Lunges 3×12','Calf Raises 3×20','Core Circuit 10min'],
+      'HIIT Circuit':['Box Jumps 3×10','KB Swings 3×20','Battle Ropes 3×30s','Jump Squats 3×20','Burpees 3×15','90s rest between'],
+      'Active Recovery':['Zone 2 Cardio 45min','Foam Rolling 10min','Stretching 15min'],
+      'Push + HIIT':['Bench Press 4×8','OHP 3×10','HIIT Finisher 20min','Lateral Raises 3×15','Tricep Circuit'],
+      'Pull + Core':['Deadlift 3×5','Pull-ups 4×max','Cable Row 3×12','Core Circuit 15min','Bicep Curls 3×12'],
+      'Legs':['Squat 4×8','Leg Press 3×12','RDL 3×10','HIIT Finisher 10min','Calf Raises 3×20'],
+      'Cardio + Mobility':['Steady State Cardio 40min','Hip Flexor Stretch','Pigeon Pose','Thoracic Mobility','Foam Roll Legs'],
+      'Upper A':['Bench 4×8','Row 4×8','OHP 3×10','Pull-ups 3×max','Core Circuit'],
+      'Lower A':['Squat 4×8','RDL 3×10','Leg Press 3×12','Lunge 3×10','Calf Raises'],
+      'HIIT A':['Sprints 10×30s','Burpees 4×15','Box Jumps 3×10','Mountain Climbers 3×45s'],
+      'Upper B':['Incline Press 4×8','T-Bar Row 4×8','Arnold Press 3×10','Lat Pulldown 3×12'],
+      'Lower B':['Front Squat 4×8','Bulgarian Split Squat 3×10','Leg Curl 3×12','Calf Raises 4×20'],
+      'HIIT B':['Jump Rope 5min','KB Circuit 3 rounds','Assault Bike 10min','Sled Push 4×20m']
+    },
+    meals:[
+      {m:'Breakfast',i:['4 egg whites + 2 whole eggs','Spinach + mushrooms sautéed','Black coffee','½ grapefruit']},
+      {m:'Mid-Morning',i:['Whey isolate shake','10 almonds']},
+      {m:'Lunch',i:['200g turkey breast','Large green salad','Cucumber, tomato, pepper','Lemon + olive oil']},
+      {m:'Pre-Workout',i:['1 apple','20g casein protein']},
+      {m:'Post-Workout',i:['Whey isolate 30g','100g sweet potato']},
+      {m:'Dinner',i:['200g white fish or chicken','Steamed veg','100g quinoa','Lemon dressing']}
+    ]
+  },
+  strength: {
+    name:'Powerlifting Strength', style:'b-pow',
+    desc:'Big 3 focus (Squat/Bench/Deadlift). 85–95% 1RM. Linear progression. Maintenance calories.',
+    mult:2.0, calAdj:150,
+    splits:{
+      3:['Squat Day','Bench Day','Deadlift Day'],
+      4:['Squat Heavy','Bench Heavy','Deadlift Heavy','Accessory Day'],
+      5:['Squat','Bench Press','Deadlift','Upper Accessories','Lower Accessories'],
+      6:['Squat A','Bench A','Deadlift A','Squat B','Bench B','Deadlift B']
+    },
+    ex:{
+      'Squat Day':['Back Squat 5×5 (90%+)','Front Squat 3×3','Pause Squat 3×3','Leg Press 3×8','Leg Curl 3×10','Core Work 10min'],
+      'Bench Day':['Bench Press 5×5 (90%+)','Close-Grip Bench 3×5','Pause Bench 3×3','OHP 3×8','Tricep Work 3×10','Face Pulls 3×15'],
+      'Deadlift Day':['Deadlift 5×3 (90%+)','Deficit Deadlift 3×3','Romanian DL 3×5','Pull-ups 4×max','Row 3×8','Grip Work'],
+      'Squat Heavy':['Back Squat 5×3 (85%+)','Front Squat 4×3','SSB Squat 3×5','Leg Press 3×10'],
+      'Bench Heavy':['Bench Press 5×3 (85%+)','Board Press 3×3','Slingshot Bench 2×5','OHP 3×8'],
+      'Deadlift Heavy':['Deadlift 5×2 (90%+)','Sumo Deadlift 3×3','Romanian DL 4×5','Rack Pull 2×3'],
+      'Accessory Day':['Pull-ups 5×max','Row Variations 4×8','Tricep + Bicep','Core Circuit','Mobility 15min'],
+      'Upper Accessories':['OHP 4×8','Pull-ups 5×max','Row 4×8','Face Pulls 3×15','Bicep + Tricep'],
+      'Lower Accessories':['Romanian DL 4×5','Good Mornings 3×8','Leg Press 3×10','Calf Raises 4×15','Core'],
+      'Squat A':['Back Squat 5×5','Paused Squat 3×3','Leg Press 3×8','Leg Curl 3×10','Plank 3×60s'],
+      'Bench A':['Bench Press 5×5','Close-Grip 3×5','OHP 3×8','Face Pulls 3×15','Dips 3×10'],
+      'Deadlift A':['Deadlift 5×3','Deficit Pull 3×3','RDL 3×5','Row 3×8','Grip Work'],
+      'Squat B':['Front Squat 4×4','Box Squat 4×3','Split Squat 3×8','Core Circuit'],
+      'Bench B':['Incline Bench 4×5','Dumbbell Press 3×8','Weighted Dips 4×5','Tricep Work'],
+      'Deadlift B':['Sumo Deadlift 4×3','Romanian DL 4×5','Good Mornings 3×8','Pull-ups 4×max']
+    },
+    meals:[
+      {m:'Breakfast',i:['5 whole eggs','2 cups oatmeal with honey','1 banana','Full-fat milk']},
+      {m:'Mid-Morning',i:['200g cottage cheese','Handful walnuts','Berries']},
+      {m:'Lunch',i:['250g beef mince or steak','200g white rice','Mixed veg','Olive oil']},
+      {m:'Pre-Workout',i:['Peanut butter rice cakes','1 banana','Pre-workout or coffee']},
+      {m:'Post-Workout',i:['Whey + dextrose shake','Creatine 5g']},
+      {m:'Dinner',i:['250g salmon','300g potato','Greens','Butter']},
+      {m:'Night',i:['Casein protein shake','Peanut butter 2 tbsp']}
+    ]
+  },
+  athletic: {
+    name:'Athletic Performance', style:'b-str',
+    desc:'Strength + power + conditioning. Balanced endurance and explosiveness. Maintenance calories.',
+    mult:1.8, calAdj:0,
+    splits:{
+      3:['Strength + Power','Conditioning + HIIT','Skill + Mobility'],
+      4:['Lower Power','Upper Power','Conditioning','Mobility + Recovery'],
+      5:['Squat + Plyos','Push + HIIT','Pull + Cardio','Power + Hinge','Mobility'],
+      6:['Strength A','Conditioning A','Mobility A','Strength B','Conditioning B','Mobility B']
+    },
+    ex:{
+      'Strength + Power':['Power Clean 4×3','Back Squat 4×5','Bench Press 4×5','Box Jumps 3×5','Sprint Drills 20min'],
+      'Conditioning + HIIT':['Assault Bike 10×30s','Battle Ropes 5×40s','Sled Push 5×20m','Burpees 4×15','Farmer Carry 4×20m'],
+      'Skill + Mobility':['Agility Ladder 20min','Hip Mobility Drills','Thoracic Rotation','Single-Leg Balance','Stretching 20min'],
+      'Lower Power':['Power Clean 3×3','Box Squat 5×3','Jump Squat 4×5','Broad Jump 3×5','Sprint Work'],
+      'Upper Power':['Push Press 4×4','Weighted Pull-ups 4×5','Plyo Pushups 3×8','Med Ball Throws 3×10','Core Power Circuit'],
+      'Conditioning':['5km Moderate Pace','HIIT Intervals 20min','KB Complex','90s rest between'],
+      'Mobility + Recovery':['Active Stretching 30min','Foam Rolling','Yoga Flow','Cold/contrast shower'],
+      'Squat + Plyos':['Back Squat 4×5','Box Jumps 4×5','Broad Jumps 3×5','Leg Press 3×8','Core Work'],
+      'Push + HIIT':['Bench 4×5','Push Press 3×5','HIIT Finisher 20min','Tricep + Lateral raises'],
+      'Pull + Cardio':['Deadlift 3×5','Pull-ups 4×max','Row 3×8','Zone 2 Cardio 20min','Biceps'],
+      'Power + Hinge':['Power Clean 4×3','RDL 4×5','KB Swings 4×20','Trap Bar Jump 3×5'],
+      'Mobility':['Yoga 30min','Hip + Thoracic Mobility','Balance Work','Breathing Drills'],
+      'Strength A':['Power Clean 3×3','Squat 4×5','Bench 4×5','Pull-ups 4×max'],
+      'Conditioning A':['Assault Bike 20min','KB Complex 3 rounds','Sled Push 4×20m'],
+      'Mobility A':['Active Stretch 20min','Hip Mobility','Thoracic Rotation','Foam Roll'],
+      'Strength B':['Push Press 4×5','Front Squat 4×4','Deadlift 3×5','Row 4×8'],
+      'Conditioning B':['5km Run','HIIT Intervals 15min','Battle Ropes 4×40s'],
+      'Mobility B':['Yoga Flow 30min','PNF Stretching','Balance + Stability']
+    },
+    meals:[
+      {m:'Breakfast',i:['Overnight oats 100g','Berries + banana','Greek yogurt 150g','3 eggs']},
+      {m:'Lunch',i:['150g chicken','200g pasta','Tomato sauce','Side salad']},
+      {m:'Pre-Workout',i:['Energy bar or banana','Electrolytes','Coffee']},
+      {m:'Post-Workout',i:['Recovery shake (carb+protein)','Creatine 5g']},
+      {m:'Dinner',i:['200g fish','200g sweet potato','Vegetables','Olive oil']}
+    ]
+  },
+  general: {
+    name:'General Fitness', style:'b-car',
+    desc:'Balanced strength + cardio + mobility. Sustainable for life. 3 strength + 1 cardio + 1 mobility.',
+    mult:1.6, calAdj:0,
+    splits:{
+      3:['Full Body A','Cardio + Core','Full Body B'],
+      4:['Full Body Strength','Cardio + HIIT','Full Body Strength 2','Mobility + Recovery'],
+      5:['Full Body A','Cardio','Full Body B','HIIT','Mobility'],
+      6:['Upper','Lower','Cardio','Full Body','HIIT','Mobility']
+    },
+    ex:{
+      'Full Body A':['Squat 3×8','Push-ups 3×12','Deadlift 3×5','Row 3×10','OHP 3×10','Plank 3×45s'],
+      'Cardio + Core':['Jog/Bike 30–40min','Crunches 3×20','Leg Raises 3×15','Russian Twists 3×20','Plank 3×60s'],
+      'Full Body B':['Lunges 3×10','Pull-ups 3×max','DB Press 3×10','Cable Row 3×12','Lateral Raises 3×15','Core Stability'],
+      'Full Body Strength':['Squat 3×8','Bench 3×8','Deadlift 3×5','Row 3×10','Plank 3×45s'],
+      'Cardio + HIIT':['Jog 20min','HIIT: 5×40s work/20s rest','Cool-down 10min'],
+      'Full Body Strength 2':['RDL 3×10','DB OHP 3×10','Pull-ups 3×max','Split Squat 3×10','Core Circuit'],
+      'Mobility + Recovery':['Yoga/Stretching 30min','Foam Rolling','Breathing Work','Light Walk'],
+      'Upper':['Bench 3×8','Row 3×8','OHP 3×10','Pull-ups 3×max','Core Work'],
+      'Lower':['Squat 3×8','RDL 3×10','Leg Press 3×10','Lunges 3×10','Calf Raises 3×20'],
+      'Cardio':['Zone 2 Cardio 40min','Core Circuit 15min'],
+      'Full Body':['Compound Circuit 4 rounds: Squat×10, Push-ups×12, Row×10, Jump Squat×10'],
+      'HIIT':['Tabata 4 rounds (20s/10s)','Burpees','Mountain Climbers','Jump Squats','High Knees'],
+      'Mobility':['Yoga Flow 30min','Hip + Shoulder Mobility','Balance Drills','Foam Roll Full Body']
+    },
+    meals:[
+      {m:'Breakfast',i:['2 whole eggs','Whole grain toast','Avocado ½','Orange juice']},
+      {m:'Lunch',i:['150g chicken or fish','Brown rice 150g','Vegetables','Olive oil']},
+      {m:'Snack',i:['Greek yogurt','Fresh fruit','Handful nuts']},
+      {m:'Dinner',i:['Lean protein 150g','Stir-fry vegetables','Whole grain pasta or rice']}
+    ]
+  },
+  calisthenics: {
+    name:'Calisthenics Mastery', style:'b-cal',
+    desc:'Progressive bodyweight training. Foundations → muscle-up, handstand, pistol squat. No gym required.',
+    mult:1.6, calAdj:0,
+    splits:{
+      3:['Push Skills','Pull Skills','Legs + Core'],
+      4:['Push A','Pull A','Legs','Skill Work'],
+      5:['Push Skills','Pull Skills','Legs + Core','Skill Work','Mobility'],
+      6:['Push A','Pull A','Legs A','Push B','Pull B','Legs B + Core']
+    },
+    ex:{
+      'Push Skills':['Pushup Progressions 5×10–20','Diamond Pushups 3×12','Pike Pushups 3×10','Handstand Wall Hold 3×30s','L-Sit 3×15s','Dips 4×12'],
+      'Pull Skills':['Pull-ups 5×max','Negative Pull-ups 3×5','Archer Pull-ups 3×5','Australian Pull-ups 3×15','Dead Hangs 3×60s','Muscle-up Progressions'],
+      'Legs + Core':['Pistol Progressions 3×8','Shrimp Squat 3×8','Jump Squats 3×20','L-Sit 3×20s','Dragon Flag 3×5','Hollow Body 3×30s'],
+      'Push A':['Pushup Ladder (1→10→1)','Pike Pushups 4×10','Dips 4×12','Handstand Hold 3×30s','Tricep Extensions 3×12'],
+      'Pull A':['Pull-ups 5×max','Inverted Rows 3×15','Commando Pull-ups 3×8','Scapular Pull-ups 3×15'],
+      'Legs':['Pistol Progressions 3×8','Bulgarian Split Squat 3×10','Jump Squats 3×20','Single-Leg DL 3×10','Calf Raises 4×20'],
+      'Skill Work':['Front Lever Progression 3×10s','Back Lever Progression 3×10s','Handstand Balance 5×30s','Ring Work 20min'],
+      'Mobility':['Hip Flexor Stretch','Shoulder Mobility','Wrist Prep 10min','Pigeon Pose','Thoracic Extension'],
+      'Push B':['Wide Pushups 4×15','Decline Pushups 4×12','Pseudo Planche Pushup 3×10','L-Sit Press 3×8'],
+      'Pull B':['Weighted Pull-ups 4×6','One-Arm Row Progression 3×8','Typewriter Pull-ups 3×5','Face Pulls 3×15'],
+      'Legs A':['Pistol Squat 4×8','Nordic Curl 3×5','Shrimp Squat 3×8','Box Jump 3×10','Calf Raises 4×20'],
+      'Legs B + Core':['Jump Squat 3×20','Single-Leg Deadlift 3×10','Hollow Body 3×30s','Dragon Flag 3×5','L-Sit 3×20s']
+    },
+    meals:[
+      {m:'Breakfast',i:['Oatmeal 100g','Banana','Protein powder optional','Green tea']},
+      {m:'Lunch',i:['Legumes/beans 200g','Brown rice','Large salad','Tahini dressing']},
+      {m:'Pre-Workout',i:['Dates + almond butter','Water 500ml']},
+      {m:'Post-Workout',i:['Protein shake or tofu 200g','Banana','Electrolytes']},
+      {m:'Dinner',i:['Salmon or chicken 150g','Quinoa 150g','Roasted vegetables','Avocado']}
+    ]
+  }
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let S = { config:null, sessions:{}, checkins:[], measurements:[], water:{date:'',filled:0} };
+
+function save(){ localStorage.setItem(SLUG, JSON.stringify(S)); }
+function load(){
+  try { const d = localStorage.getItem(SLUG); if(d) S = JSON.parse(d); } catch(e){}
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('ci-date').value = today;
+  document.getElementById('m-date').value = today;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const idx = ['dashboard','config','training','nutrition','checkin','measurements'].indexOf(name);
+  if(idx>=0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  if(name==='dashboard') updateDashboard();
+}
+
+// ── GENERATE PROGRAM ──────────────────────────────────────────────────
+function generateProgram(){
+  const age = +document.getElementById('c-age').value||25;
+  const gender = document.getElementById('c-gender').value;
+  const weight = +document.getElementById('c-weight').value||75;
+  const height = +document.getElementById('c-height').value||175;
+  const goal = document.getElementById('c-goal').value;
+  const level = document.getElementById('c-level').value;
+  const days = +document.getElementById('c-days').value;
+  const act = +document.getElementById('c-activity').value;
+
+  // BMR (Mifflin-St Jeor)
+  const bmr = gender==='male' ? 10*weight+6.25*height-5*age+5 : 10*weight+6.25*height-5*age-161;
+  const tdee = Math.round(bmr*act);
+  const p = PROG[goal];
+  const targetCals = tdee + p.calAdj;
+  const proteinG = Math.round(weight * p.mult);
+  const fatG = Math.round((targetCals*0.25)/9);
+  const carbG = Math.round((targetCals - proteinG*4 - fatG*9)/4);
+  const waterGlasses = Math.max(8, Math.round((weight*35)/250));
+  const split = p.splits[days]||p.splits[4];
+
+  S.config = { age,gender,weight,height,goal,level,days,act,tdee,targetCals,proteinG,carbG,fatG,waterGlasses,split };
+  save();
+
+  document.getElementById('c-result').innerHTML = `
+    <div class="alert as">✅ Program generated! Switch to <strong>Training</strong> and <strong>Nutrition</strong> tabs.</div>
+    <div class="card">
+      <div class="card-title">⚡ ${p.name} — ${level.charAt(0).toUpperCase()+level.slice(1)}</div>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">${p.desc}</p>
+      <div class="g4">
+        <div class="stat"><div class="val">${tdee}</div><div class="lbl">TDEE (kcal)</div></div>
+        <div class="stat"><div class="val">${targetCals}</div><div class="lbl">Target Calories</div></div>
+        <div class="stat"><div class="val">${proteinG}g</div><div class="lbl">Protein/day</div></div>
+        <div class="stat"><div class="val">${waterGlasses}</div><div class="lbl">Water Glasses</div></div>
+      </div>
+    </div>`;
+  renderTraining();
+  renderNutrition();
+}
+
+// ── TRAINING ──────────────────────────────────────────────────────────
+function renderTraining(){
+  if(!S.config) return;
+  document.getElementById('t-empty').style.display='none';
+  document.getElementById('t-content').style.display='block';
+  const p = PROG[S.config.goal];
+  const grid = document.getElementById('t-split-grid');
+  grid.innerHTML = S.config.split.map((day,i)=>{
+    const exs = p.ex[day]||['Follow your coach-assigned exercises for this day'];
+    return `<div class="day-card">
+      <div class="day-title">Day ${i+1}: ${day}</div>
+      <span class="badge ${p.style}" style="margin-bottom:.5rem;display:inline-block;">${S.config.goal.replace('_',' ')}</span>
+      <ul class="ex-list">${exs.map(e=>`<li class="ex-item">${e}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+  renderSessionLog();
+}
+
+function renderSessionLog(){
+  if(!S.config) return;
+  const wk = weekKey();
+  document.getElementById('t-session-log').innerHTML =
+    `<div style="font-size:.8rem;color:var(--muted);margin-bottom:.65rem;">Week ${wk} · Click to mark complete</div>` +
+    S.config.split.map((day,i)=>{
+      const k = wk+'_d'+i, done = S.sessions[k];
+      return `<div class="ms${done?' done':''}" onclick="toggleSess(${i})">
+        <div class="ms-cb">✓</div>
+        <div><div class="ms-title">Day ${i+1}: ${day}</div></div>
+      </div>`;
+    }).join('');
+}
+
+function toggleSess(i){
+  const k = weekKey()+'_d'+i;
+  if(S.sessions[k]) delete S.sessions[k]; else S.sessions[k]=1;
+  save(); renderSessionLog(); updateDashboard();
+}
+
+function weekKey(){
+  const n=new Date(), j=new Date(n.getFullYear(),0,1);
+  const w=Math.ceil((((n-j)/86400000)+j.getDay()+1)/7);
+  return n.getFullYear()+'-W'+String(w).padStart(2,'0');
+}
+
+// ── NUTRITION ─────────────────────────────────────────────────────────
+function renderNutrition(){
+  if(!S.config) return;
+  document.getElementById('n-empty').style.display='none';
+  document.getElementById('n-content').style.display='block';
+  const {targetCals,proteinG,carbG,fatG,waterGlasses,goal} = S.config;
+  document.getElementById('n-kcal').textContent = targetCals;
+  document.getElementById('n-protein').textContent = proteinG+'g';
+  document.getElementById('n-carbs').textContent = carbG+'g';
+  document.getElementById('n-fat').textContent = fatG+'g';
+  document.getElementById('n-tdee').textContent = S.config.tdee+' kcal';
+  document.getElementById('n-wt-target').textContent = waterGlasses+' glasses (~'+Math.round(waterGlasses*.25*10)/10+'L)';
+
+  const pPct=Math.round(proteinG*4/targetCals*100), cPct=Math.round(carbG*4/targetCals*100), fPct=Math.round(fatG*9/targetCals*100);
+  document.getElementById('n-pp').textContent=pPct+'%'; document.getElementById('n-pb-p').style.width=pPct+'%';
+  document.getElementById('n-pc').textContent=cPct+'%'; document.getElementById('n-pb-c').style.width=cPct+'%';
+  document.getElementById('n-pf').textContent=fPct+'%'; document.getElementById('n-pb-f').style.width=fPct+'%';
+
+  drawMacroDonut(proteinG*4, carbG*4, fatG*9, targetCals);
+  renderWater(waterGlasses);
+
+  const meals = PROG[goal].meals;
+  document.getElementById('n-meal-plan').innerHTML = meals.map(m=>`
+    <div class="day-card">
+      <div class="day-title">${m.m}</div>
+      <ul class="ex-list">${m.i.map(x=>`<li class="ex-item">${x}</li>`).join('')}</ul>
+    </div>`).join('');
+}
+
+function drawMacroDonut(pCal,cCal,fCal,total){
+  const svg=document.getElementById('macro-donut');
+  const cx=60,cy=60,r=50,sw=14,circ=2*Math.PI*r;
+  const segs=[
+    {pct:pCal/total,col:'#60a5fa'},{pct:cCal/total,col:'#4ade80'},{pct:fCal/total,col:'#fbbf24'}
+  ];
+  let off=0, html='';
+  segs.forEach(s=>{
+    const dash=circ*(s.pct-0.015);
+    html+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.col}" stroke-width="${sw}" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${-off}"/>`;
+    off+=circ*s.pct;
+  });
+  svg.innerHTML=html;
+}
+
+function renderWater(total){
+  const today=new Date().toISOString().split('T')[0];
+  if(S.water.date!==today){ S.water={date:today,filled:0}; save(); }
+  const cont=document.getElementById('water-cups');
+  cont.innerHTML='';
+  for(let i=0;i<total;i++){
+    const cup=document.createElement('div');
+    cup.className='wcup'+(i<S.water.filled?' on':'');
+    cup.textContent=i<S.water.filled?'💧':'○';
+    cup.onclick=()=>{ S.water.filled=(i<S.water.filled)?i:i+1; save(); renderWater(total); };
+    cont.appendChild(cup);
+  }
+  const pct=total>0?Math.round(S.water.filled/total*100):0;
+  document.getElementById('w-bar').style.width=pct+'%';
+  document.getElementById('w-pct').textContent=pct+'%';
+  document.getElementById('n-wt-filled').textContent=S.water.filled;
+}
+
+function resetWater(){ S.water.filled=0; save(); if(S.config) renderWater(S.config.waterGlasses); }
+
+// ── CHECK-INS ─────────────────────────────────────────────────────────
+function logCheckin(){
+  const date=document.getElementById('ci-date').value;
+  const wt=parseFloat(document.getElementById('ci-wt').value);
+  const sess=+document.getElementById('ci-sess').value||0;
+  const energy=+document.getElementById('ci-energy').value;
+  const notes=document.getElementById('ci-notes').value.trim();
+  if(!date||isNaN(wt)){ alert('Please fill in Date and Weight.'); return; }
+  S.checkins.unshift({date,wt,sess,energy,notes});
+  save();
+  document.getElementById('ci-wt').value='';
+  document.getElementById('ci-sess').value='';
+  document.getElementById('ci-notes').value='';
+  renderCheckins(); updateDashboard();
+}
+
+function renderCheckins(){
+  const c=document.getElementById('ci-history');
+  if(!S.checkins.length){ c.innerHTML='<div style="color:var(--muted);text-align:center;padding:2rem;font-size:.85rem;">No check-ins yet. Log your first one!</div>'; return; }
+  c.innerHTML=S.checkins.slice(0,25).map((ci,i)=>{
+    const prev=S.checkins[i+1];
+    const diff=prev?(ci.wt-prev.wt).toFixed(1):null;
+    const ds=diff!==null?(+diff>0?`<span style="color:#f87171;font-size:.8rem;">+${diff}kg</span>`:`<span style="color:#4ade80;font-size:.8rem;">${diff}kg</span>`):'';
+    return `<div class="ci-entry">
+      <div class="ci-date">${ci.date} · Energy: ${ci.energy}/10 · Sessions: ${ci.sess}</div>
+      <div class="ci-wt">${ci.wt} kg ${ds}</div>
+      ${ci.notes?`<div class="ci-note">${ci.notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── MEASUREMENTS ──────────────────────────────────────────────────────
+function logMeasurement(){
+  const date=document.getElementById('m-date').value;
+  if(!date){ alert('Select a date.'); return; }
+  const get=id=>parseFloat(document.getElementById('m-'+id).value)||null;
+  const m={date, chest:get('chest'), waist:get('waist'), hips:get('hips'), arms:get('arms'), thighs:get('thighs'), shoulders:get('shoulders')};
+  S.measurements.unshift(m); save();
+  ['chest','waist','hips','arms','thighs','shoulders'].forEach(id=>document.getElementById('m-'+id).value='');
+  renderMeasurements();
+}
+
+function renderMeasurements(){
+  const tb=document.getElementById('m-tbody');
+  if(!S.measurements.length){ tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:1.5rem;">No measurements yet.</td></tr>'; drawMeasChart([]); return; }
+  tb.innerHTML=S.measurements.slice(0,15).map((m,i)=>`<tr>
+    <td>${m.date}</td><td>${m.chest||'—'}</td><td>${m.waist||'—'}</td><td>${m.hips||'—'}</td><td>${m.arms||'—'}</td><td>${m.thighs||'—'}</td>
+    <td><button class="btn btn-g btn-sm" onclick="delMeas(${i})">✕</button></td>
+  </tr>`).join('');
+  drawMeasChart([...S.measurements].slice(0,8).reverse());
+}
+
+function delMeas(i){ S.measurements.splice(i,1); save(); renderMeasurements(); }
+
+function drawMeasChart(data){
+  const svg=document.getElementById('m-chart');
+  if(data.length<2){ svg.innerHTML='<text x="400" y="75" text-anchor="middle" fill="#64748b" font-size="13">Log at least 2 measurements to see the trend</text>'; return; }
+  const W=800,H=140,pd=50;
+  const waistV=data.map(d=>d.waist).filter(Boolean);
+  const armsV=data.map(d=>d.arms).filter(Boolean);
+  const all=[...waistV,...armsV]; if(!all.length){ svg.innerHTML=''; return; }
+  const minV=Math.min(...all)-2, maxV=Math.max(...all)+2;
+  const xS=(W-pd*2)/Math.max(data.length-1,1);
+  const yS=v=>pd+(1-(v-minV)/(maxV-minV))*(H-pd*1.5);
+  let html=`<line x1="${pd}" y1="${H-pd/2}" x2="${W-pd}" y2="${H-pd/2}" stroke="#334155" stroke-width="1"/>`;
+  const line=(arr,col)=>{
+    const pts=data.map((d,i)=>arr[i]?`${pd+i*xS},${yS(arr[i])}`:null).filter(Boolean);
+    if(pts.length<2) return '';
+    let s=`<polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="2"/>`;
+    pts.forEach(pt=>{ const [x,y]=pt.split(','); s+=`<circle cx="${x}" cy="${y}" r="4" fill="${col}"/>`; });
+    return s;
+  };
+  html+=line(data.map(d=>d.waist),'#60a5fa');
+  html+=line(data.map(d=>d.arms),'#4ade80');
+  data.forEach((d,i)=>{ html+=`<text x="${pd+i*xS}" y="${H}" text-anchor="middle" fill="#64748b" font-size="10">${d.date.slice(5)}</text>`; });
+  html+=`<text x="${pd}" y="14" fill="#60a5fa" font-size="11">— Waist</text><text x="${pd+70}" y="14" fill="#4ade80" font-size="11">— Arms</text>`;
+  svg.innerHTML=html;
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────
+function setRing(id,pct){
+  const el=document.getElementById(id); if(!el) return;
+  el.style.strokeDasharray=CIRC; el.style.strokeDashoffset=CIRC*(1-Math.min(1,pct));
+}
+
+function updateDashboard(){
+  // Stats
+  const wk=weekKey();
+  const weekDone=Object.keys(S.sessions).filter(k=>k.startsWith(wk)).length;
+  document.getElementById('d-sessions').textContent=weekDone;
+  document.getElementById('d-checkins').textContent=S.checkins.length;
+  if(S.checkins.length) document.getElementById('d-weight').textContent=S.checkins[0].wt+' kg';
+  if(S.config) document.getElementById('d-program').textContent=PROG[S.config.goal].name.split(' ')[0];
+
+  // Training ring — this week
+  if(S.config){
+    const pct=weekDone/S.config.days;
+    setRing('r-train',pct); document.getElementById('r-train-pct').textContent=Math.round(pct*100)+'%';
+    // Water ring
+    const wPct=S.config.waterGlasses>0?S.water.filled/S.config.waterGlasses:0;
+    setRing('r-water',wPct); document.getElementById('r-water-pct').textContent=Math.round(wPct*100)+'%';
+    // Program card
+    document.getElementById('d-prog-card').style.display='block';
+    document.getElementById('d-prog-content').innerHTML=`<div class="g4">
+      <div class="stat"><div class="val">${PROG[S.config.goal].name.split(' ')[0]}</div><div class="lbl">Program Type</div></div>
+      <div class="stat"><div class="val">${S.config.days}×/wk</div><div class="lbl">Training Days</div></div>
+      <div class="stat"><div class="val">${S.config.targetCals}</div><div class="lbl">Target kcal</div></div>
+      <div class="stat"><div class="val">${S.config.proteinG}g</div><div class="lbl">Protein/day</div></div>
+    </div>`;
+  }
+
+  // Year ring — day of year / 365
+  const now=new Date(), jan1=new Date(now.getFullYear(),0,1);
+  const doy=Math.floor((now-jan1)/86400000)+1;
+  setRing('r-year',doy/365); document.getElementById('r-year-pct').textContent=Math.round(doy/365*100)+'%';
+
+  drawWeightChart();
+  drawYearMap();
+}
+
+function drawWeightChart(){
+  const svg=document.getElementById('wt-chart');
+  if(S.checkins.length<2){ svg.innerHTML='<text x="190" y="65" text-anchor="middle" fill="#64748b" font-size="12">Log 2+ check-ins to see weight trend</text>'; return; }
+  const data=[...S.checkins].slice(0,8).reverse();
+  const W=380,H=120,pd=40;
+  const ws=data.map(d=>d.wt), minW=Math.min(...ws)-1, maxW=Math.max(...ws)+1;
+  const xS=(W-pd*2)/Math.max(data.length-1,1);
+  const yS=v=>pd+(1-(v-minW)/(maxW-minW))*(H-pd*1.5);
+  const pts=data.map((d,i)=>`${pd+i*xS},${yS(d.wt)}`).join(' ');
+  let html=`<polyline points="${pts}" fill="none" stroke="#2E75B6" stroke-width="2"/>`;
+  data.forEach((d,i)=>{
+    const x=pd+i*xS, y=yS(d.wt);
+    html+=`<circle cx="${x}" cy="${y}" r="4" fill="#FFD700"/>`;
+    html+=`<text x="${x}" y="${y-7}" text-anchor="middle" fill="#e2e8f0" font-size="9">${d.wt}</text>`;
+    html+=`<text x="${x}" y="${H-4}" text-anchor="middle" fill="#64748b" font-size="9">${d.date.slice(5)}</text>`;
+  });
+  svg.innerHTML=html;
+}
+
+function drawYearMap(){
+  const cont=document.getElementById('year-map');
+  const yr=new Date().getFullYear(), jan1=new Date(yr,0,1);
+  const ciDays=new Set(S.checkins.map(c=>c.date));
+  const today=new Date().toISOString().split('T')[0];
+  const cs=11, gap=2, cols=Math.ceil(365/7);
+  let svg=`<svg width="${cols*(cs+gap)}" height="${7*(cs+gap)+20}" style="min-width:${cols*(cs+gap)}px;">`;
+  for(let i=0;i<365;i++){
+    const d=new Date(jan1); d.setDate(jan1.getDate()+i);
+    const ds=d.toISOString().split('T')[0];
+    const col=Math.floor(i/7), row=i%7;
+    const x=col*(cs+gap), y=row*(cs+gap)+18;
+    const isCi=ciDays.has(ds), isToday=ds===today;
+    const fill=isToday?'#FFD700':isCi?'#2E75B6':'#1e293b';
+    svg+=`<rect x="${x}" y="${y}" width="${cs}" height="${cs}" rx="2" fill="${fill}" stroke="#334155" stroke-width="0.5"><title>${ds}${isCi?' ✓ Check-in':''}</title></rect>`;
+  }
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  months.forEach((m,mi)=>{
+    const d=new Date(yr,mi,1), doy=Math.floor((d-jan1)/86400000), col=Math.floor(doy/7);
+    svg+=`<text x="${col*(cs+gap)}" y="12" fill="#64748b" font-size="9">${m}</text>`;
+  });
+  svg+='</svg>';
+  cont.innerHTML=svg;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  load();
+  if(S.config){ renderTraining(); renderNutrition(); }
+  renderCheckins(); renderMeasurements(); updateDashboard();
+});
+</script>
+</body>
+</html>
