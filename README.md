@@ -177,3 +177,8 @@ cp -r gemini/* ~/.gemini/skills/
 - **Goal:** Resume and drive forward any software project tracked in a markdown file — no manual prompt pasting needed.
 - **Use when:** User says "/project-tracker", "resume my project", "continue my project", "where did I leave off", "what's my next step", or "pick up where we stopped". Also triggers on "let's keep working" or "what was I doing last time" at the start of a session.
 - **Outputs:** Orientation briefing (active project, last step, next step, checklist progress) + completed work for the next step + updated markdown file (checkboxes, Last Step, Next Step, Status, Session Log) after every completed step.
+
+### 35. Excel Planner Builder
+- **Goal:** Build a complete Excel/Google Sheets planner or tracker from a plain description — Python openpyxl generator + Google Apps Script automation file.
+- **Use when:** User says "create a tracker", "build a planner", "I need an Excel for", "make a weekly plan", "build me a dashboard", "I need a Google Sheets template", or describes any system they want to manage in a spreadsheet.
+- **Outputs:** `generate_<name>.py` (fully styled Excel file with nav bar, dropdowns, conditional formatting, progress bars, charts) + `<name>_sync.gs` (live onEdit sync, cell merging, scheduled resets, custom menu).
