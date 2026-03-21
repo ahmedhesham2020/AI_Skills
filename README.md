@@ -158,22 +158,22 @@ cp -r gemini/* ~/.gemini/skills/
 - **Use when:** User says "create a plan for", "build a roadmap for", "I need a plan to", "make a visual plan", or describes any goal and asks for milestones.
 - **Outputs:** Interactive HTML file with circular SVG progress rings per phase, clickable milestone checkboxes, live overall progress bar, and localStorage persistence — works offline in any browser.
 
-### 32. System Architect
-- **Goal:** Design and build any operational system — attendance, goal-tracking, HR, project management, lifestyle, OKR, CRM, and more — grounded in core architectural principles (scalability, CAP theorem, fault tolerance, security by design).
-- **Use when:** User says "build me a system for", "design a system that tracks", "I need a system to manage", "create an attendance system", "make a goal tracker", or describes any structured operational tool they need.
-- **Outputs:** Personal/team scale → interactive HTML dashboard + Excel workbook (with visuals, trackers, progress rings, charts, branded). Enterprise scale → architecture document with tool recommendations, system data model, component map, and five-pillar architectural principles analysis.
-
 ### 31. Prompt Architect
 - **Goal:** Transform a rough user request into a complete, structured prompt using a six-section anatomy (Role, Task, Context Block, Goal/Stakes, Completion Criteria, Output Format).
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
 
-### 34. Project Tracker
-- **Goal:** Resume and drive forward any software project tracked in a markdown file — no manual prompt pasting needed.
-- **Use when:** User says "/project-tracker", "resume my project", "continue my project", "where did I leave off", "what's my next step", or "pick up where we stopped". Also triggers on "let's keep working" or "what was I doing last time" at the start of a session.
-- **Outputs:** Orientation briefing (active project, last step, next step, checklist progress) + completed work for the next step + updated markdown file (checkboxes, Last Step, Next Step, Status, Session Log) after every completed step.
+### 32. System Architect
+- **Goal:** Design and build any operational system — attendance, goal-tracking, HR, project management, lifestyle, OKR, CRM, and more — grounded in core architectural principles (scalability, CAP theorem, fault tolerance, security by design).
+- **Use when:** User says "build me a system for", "design a system that tracks", "I need a system to manage", "create an attendance system", "make a goal tracker", or describes any structured operational tool they need.
+- **Outputs:** Personal/team scale → interactive HTML dashboard + Excel workbook (with visuals, trackers, progress rings, charts, branded). Enterprise scale → architecture document with tool recommendations, system data model, component map, and five-pillar architectural principles analysis.
 
 ### 33. Automation Engineer
 - **Goal:** Build complete, production-ready automated systems for any manual or repetitive business process — scripts, schedulers, integrations, error handlers, notifications, and dashboards.
 - **Use when:** User says "automate this process", "we do this manually every day", "build a workflow that", "stop doing X manually", "save time on", or describes any multi-step manual task done repeatedly by staff.
 - **Outputs:** Working code for all components + 7-page deployment PDF guide (visual architecture diagram, prerequisites, step-by-step deployment, verification checklist, rollback plan) + executed test results (T-01 happy path, T-02 failure/recovery, T-03 security) + Automation Delivery Report with architecture decisions, estimated savings with calculation, and go-live checklist.
+
+### 34. Project Tracker
+- **Goal:** Resume and drive forward any software project tracked in a markdown file — no manual prompt pasting needed.
+- **Use when:** User says "/project-tracker", "resume my project", "continue my project", "where did I leave off", "what's my next step", or "pick up where we stopped". Also triggers on "let's keep working" or "what was I doing last time" at the start of a session.
+- **Outputs:** Orientation briefing (active project, last step, next step, checklist progress) + completed work for the next step + updated markdown file (checkboxes, Last Step, Next Step, Status, Session Log) after every completed step.
