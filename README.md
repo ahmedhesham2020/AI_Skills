@@ -1,5 +1,7 @@
 # AI Skills Library
 
+[![Validate Skills](https://github.com/ahmedhesham2020/AI_Skills/actions/workflows/test-skills.yml/badge.svg)](https://github.com/ahmedhesham2020/AI_Skills/actions/workflows/test-skills.yml)
+
 A collection of Claude Code skill files for software validation, test automation, and engineering productivity. Clone into your Claude skills directory to activate expert-level context for each domain.
 
 ## Installation
