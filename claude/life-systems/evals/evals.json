@@ -1,0 +1,29 @@
+{
+  "skill_name": "life-systems",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I keep failing at the gym. I've started and quit 4 times this year. I score myself 3/10 on fitness. I have a gym membership, I have the time (mornings are free), but I never go consistently. Help me build a system.",
+      "expected_output": "Identity vision + SOP with if/then triggers + default weekly schedule + lead indicators (sessions per week, not outcome-based) + 30-day kickstart starting with MVP (2x/week only) + one automation. Bottleneck should be identified as missing trigger/habit stack, not motivation.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I scored 4/10 in finances. I earn well but spend everything. I have no savings, no investments, and I check my bank account with dread. I want to build a financial system.",
+      "expected_output": "Identity vision around financial identity (not just saving money) + SOP for a weekly money date + pay-yourself-first automation as the core mechanism + lead indicators (savings rate %, spending tracked Y/N, net worth logged) + 30-day kickstart starting with one automated transfer + bottleneck identified as no system not no income.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My relationships are a 5/10. I'm bad at staying in touch with friends. I want to be a better friend but I always forget to reach out and then feel guilty. Make this systematic.",
+      "expected_output": "Identity vision around being someone who initiates + SOP for a 'relationship CRM' with weekly 15-min block + contact list with reach-out frequency + lead indicator of outreach per week + minimum viable version (reach out to 2 people per week) + automation suggestion (recurring calendar reminder or app like Dex/Notion).",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I want to build a morning routine system. Right now I wake up, scroll my phone for 45 minutes, and then rush to work feeling behind. I'd rate my mornings 2/10.",
+      "expected_output": "Bottleneck correctly identified as phone-in-bed trigger (not needing more willpower) + identity vision + SOP that starts with phone placement the night before (upstream fix) + default week morning block + minimum viable version (10-min version, not 2-hour aspirational one) + lead indicators that are behavior-based not outcome-based.",
+      "files": []
+    }
+  ]
+}
