@@ -168,6 +168,11 @@ cp -r gemini/* ~/.gemini/skills/
 - **Use when:** You want a high-quality, copy-ready prompt for any task — launches, plans, audits, test suites, study plans, and more. Asks 3 clarifying questions if input is too thin.
 - **Outputs:** A fenced, copy-ready prompt with all 6 labeled sections + a quality check summary + one improvement tip.
 
+### 34. Project Tracker
+- **Goal:** Resume and drive forward any software project tracked in a markdown file — no manual prompt pasting needed.
+- **Use when:** User says "/project-tracker", "resume my project", "continue my project", "where did I leave off", "what's my next step", or "pick up where we stopped". Also triggers on "let's keep working" or "what was I doing last time" at the start of a session.
+- **Outputs:** Orientation briefing (active project, last step, next step, checklist progress) + completed work for the next step + updated markdown file (checkboxes, Last Step, Next Step, Status, Session Log) after every completed step.
+
 ### 33. Automation Engineer
 - **Goal:** Build complete, production-ready automated systems for any manual or repetitive business process — scripts, schedulers, integrations, error handlers, notifications, and dashboards.
 - **Use when:** User says "automate this process", "we do this manually every day", "build a workflow that", "stop doing X manually", "save time on", or describes any multi-step manual task done repeatedly by staff.

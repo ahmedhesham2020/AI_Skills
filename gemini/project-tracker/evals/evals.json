@@ -1,0 +1,23 @@
+{
+  "skill_name": "project-tracker",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/project-tracker\n\nThe tracking file is at /Users/ahmedhesham/Downloads/01-My Work/QA_Portfolio_Projects.md. All projects are Not Started. Resume and begin the first priority project.",
+      "expected_output": "Skill reads the file, identifies Project 2 (API Suite) or Project 1 (E2E Framework) as the first Not Started project, displays the orientation briefing with checklist progress (0/8), and immediately begins working on the first unchecked step without waiting. After completing the step it updates the markdown file and tells the user what was done.",
+      "files": ["/Users/ahmedhesham/Downloads/01-My Work/QA_Portfolio_Projects.md"]
+    },
+    {
+      "id": 2,
+      "prompt": "Continue my project. Last time I finished setting up the project structure and base page class for the E2E framework. The status file is at /Users/ahmedhesham/Downloads/01-My Work/QA_Portfolio_Projects.md",
+      "expected_output": "Skill reads the file, finds Project 1 (E2E Framework) as In Progress with 'Base page class' checked. Displays briefing showing 2/8 steps done. Immediately begins the next unchecked step (page objects). After completing it, updates [x] in the markdown file, updates Last Step and Next Step fields, then asks whether to continue or stop.",
+      "files": ["/Users/ahmedhesham/Downloads/01-My Work/QA_Portfolio_Projects.md"]
+    },
+    {
+      "id": 3,
+      "prompt": "/project-tracker\n\nI want to stop for today after the current step.",
+      "expected_output": "Skill reads default file, identifies active project, completes exactly one step, then stops. It appends a row to the Session Log table with today's date, the project name, a specific description of what was completed, and the next session goal. It also updates the project Status to In Progress (or Done if last step). The file is saved correctly.",
+      "files": ["/Users/ahmedhesham/Downloads/01-My Work/QA_Portfolio_Projects.md"]
+    }
+  ]
+}
