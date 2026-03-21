@@ -1,5 +1,6 @@
 ---
 name: claude-api
+version: 1.0.0
 description: "Build apps with the Claude API or Anthropic SDK. TRIGGER when: code imports `anthropic`/`@anthropic-ai/sdk`/`claude_agent_sdk`, or user asks to use Claude API, Anthropic SDKs, or Agent SDK. DO NOT TRIGGER when: code imports `openai`/other AI SDK, general programming, or ML/data-science tasks."
 license: Complete terms in LICENSE.txt
 ---

@@ -1,5 +1,6 @@
 ---
 name: sub-agent-creator
+version: 1.0.0
 description: Creates custom sub-agent definition files for Gemini CLI.
 keywords: ["sub-agent", "agent", "create agent", "custom agent"]
 ---
@@ -70,6 +71,7 @@ Once all information is gathered, construct the full content of the agent defini
 ````markdown
 ---
 name: security-auditor
+version: 1.0.0
 description: Specialized in finding security vulnerabilities in code.
 tools:
   - read_file
